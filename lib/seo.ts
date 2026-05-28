@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import type { BlogPost, Listing } from "./data";
-import {
-  SITE_URL,
-  getBlogImageUrl,
-  getListingImageUrl,
-  getPropertyTypeLabel,
-} from "./data";
+import { SITE_URL, getBlogImageUrl, getPropertyTypeLabel } from "./data";
+import { resolveListingImage } from "./listings-db";
 
 export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
@@ -80,7 +76,7 @@ export function realEstateListingJsonLd(listing: Listing) {
     description: listing.description,
     url: absoluteUrl(`/listings/${listing.slug}`),
     datePosted: "2026-01-01",
-    image: getListingImageUrl(listing.imageSeed),
+    image: resolveListingImage(listing),
     offers: {
       "@type": "Offer",
       price: listing.price,

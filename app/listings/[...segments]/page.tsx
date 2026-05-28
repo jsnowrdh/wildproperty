@@ -5,19 +5,19 @@ import { JsonLd } from "@/components/json-ld";
 import { ListingDetailContent } from "@/components/listing-detail-content";
 import { LocationPageSections } from "@/components/location-page-sections";
 import { ListingsBrowser } from "@/components/listings-browser";
-import {
-  LISTINGS,
-  getListingBySlug,
-  getListingImageUrl,
-  getPropertyTypeLabel,
-  getStateBySlug,
-} from "@/lib/data";
+import { getPropertyTypeLabel, getStateBySlug } from "@/lib/data";
 import {
   generateLocationPageContent,
   getAllLocationPageParams,
-  getLocationListings,
   isValidPropertyTypeSlug,
 } from "@/lib/location-pages";
+import {
+  getActiveListings,
+  getListingBySlug,
+  getListingsByTypeAndState,
+  getRelatedListings,
+  resolveListingImage,
+} from "@/lib/listings-db";
 import {
   breadcrumbJsonLd,
   buildMetadata,
@@ -31,7 +31,8 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const listingParams = LISTINGS.map((listing) => ({
+  const listings = await getActiveListings();
+  const listingParams = listings.map((listing) => ({
     segments: [listing.slug],
   }));
 
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { segments } = await params;
 
   if (segments.length === 1) {
-    const listing = getListingBySlug(segments[0]);
+    const listing = await getListingBySlug(segments[0]);
     if (!listing) {
       return { title: "Listing Not Found" };
     }
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: listingDetailDescription(listing),
       path: `/listings/${listing.slug}`,
       openGraph: {
-        images: [getListingImageUrl(listing.imageSeed)],
+        images: [resolveListingImage(listing, 1200, 750)],
       },
     });
   }
@@ -67,7 +68,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       return { title: "Page Not Found" };
     }
 
-    const content = generateLocationPageContent(type, state);
+    const listings = await getListingsByTypeAndState(type, state);
+    const content = generateLocationPageContent(type, state, listings);
     if (!content) {
       return { title: "Page Not Found" };
     }
@@ -86,11 +88,12 @@ export default async function ListingsCatchAllPage({ params }: PageProps) {
   const { segments } = await params;
 
   if (segments.length === 1) {
-    const listing = getListingBySlug(segments[0]);
+    const listing = await getListingBySlug(segments[0]);
     if (!listing) {
       notFound();
     }
-    return <ListingDetailContent listing={listing} />;
+    const related = await getRelatedListings(listing);
+    return <ListingDetailContent listing={listing} related={related} />;
   }
 
   if (segments.length === 2) {
@@ -101,13 +104,12 @@ export default async function ListingsCatchAllPage({ params }: PageProps) {
     }
 
     const stateInfo = getStateBySlug(state);
-    const content = generateLocationPageContent(type, state);
+    const listings = await getListingsByTypeAndState(type, state);
+    const content = generateLocationPageContent(type, state, listings);
 
     if (!stateInfo || !content) {
       notFound();
     }
-
-    const listings = getLocationListings(type, state);
 
     return (
       <>

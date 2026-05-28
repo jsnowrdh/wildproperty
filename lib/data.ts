@@ -5,6 +5,7 @@ export type PropertyType =
   | "nature-resort";
 
 export interface Listing {
+  id?: string;
   slug: string;
   title: string;
   city: string;
@@ -17,11 +18,13 @@ export interface Listing {
   type: PropertyType;
   description: string;
   summary: string;
-  imageSeed: string;
+  imageUrl: string;
   featured: boolean;
   sites?: number;
   highlights: string[];
   amenities: string[];
+  status?: string;
+  createdAt?: string;
   financials?: {
     grossRevenue?: string;
     noi?: string;
@@ -129,231 +132,6 @@ export const US_STATES: { value: string; label: string; slug: string }[] = [
   { value: "WV", label: "West Virginia", slug: "west-virginia" },
   { value: "WI", label: "Wisconsin", slug: "wisconsin" },
   { value: "WY", label: "Wyoming", slug: "wyoming" },
-];
-
-export const LISTINGS: Listing[] = [
-  {
-    slug: "blue-ridge-glamping",
-    title: "Blue Ridge Glamping Retreat",
-    city: "Asheville",
-    state: "NC",
-    stateSlug: "north-carolina",
-    location: "Asheville, NC",
-    price: 1250000,
-    priceDisplay: "$1.25M",
-    acres: 22,
-    type: "glamping-retreat",
-    summary:
-      "Fully operational glamping resort with 14 luxury tents, main lodge, and mountain views.",
-    description:
-      "Blue Ridge Glamping Retreat is a turnkey luxury outdoor hospitality asset in the heart of the Blue Ridge Mountains near Asheville. The property features 14 fully outfitted safari-style tents with en-suite bathrooms, a central lodge with commercial kitchen and event space, and panoramic mountain views. Strong ADR and occupancy driven by wedding groups, corporate retreats, and leisure travelers seeking a premium nature experience.",
-    imageSeed: "photo-1632367294096-4e77d53c4ae9",
-    featured: true,
-    sites: 14,
-    highlights: [
-      "14 luxury glamping tents with private bathrooms",
-      "Main lodge with commercial kitchen",
-      "Mountain views and hiking trail access",
-      "Strong wedding and event revenue stream",
-    ],
-    amenities: [
-      "Wi-Fi",
-      "Fire pits",
-      "Event pavilion",
-      "On-site parking",
-      "Laundry facilities",
-    ],
-    financials: {
-      grossRevenue: "$890K",
-      noi: "$420K",
-      occupancy: "72%",
-    },
-  },
-  {
-    slug: "riverbend-rv-park",
-    title: "Riverbend RV Park",
-    city: "Bend",
-    state: "OR",
-    stateSlug: "oregon",
-    location: "Bend, OR",
-    price: 875000,
-    priceDisplay: "$875K",
-    acres: 8,
-    type: "rv-park",
-    summary:
-      "45-site RV park along the Deschutes River. Strong occupancy and repeat guest base.",
-    description:
-      "Riverbend RV Park sits on 8 acres along the Deschutes River in Central Oregon, one of the fastest-growing outdoor recreation markets in the West. The park includes 45 full-hookup sites, a club house, laundry, and river access. Consistent year-round occupancy from snowbirds, fly fishermen, and Bend-area visitors supports stable cash flow.",
-    imageSeed: "photo-1441974231531-c6227db76b6e",
-    featured: true,
-    sites: 45,
-    highlights: [
-      "45 full-hookup RV sites",
-      "Deschutes River frontage",
-      "Established repeat guest base",
-      "Near Bend outdoor recreation corridor",
-    ],
-    amenities: [
-      "Full hookups",
-      "River access",
-      "Club house",
-      "Pet-friendly",
-      "Wi-Fi",
-    ],
-    financials: {
-      grossRevenue: "$620K",
-      noi: "$310K",
-      occupancy: "68%",
-    },
-  },
-  {
-    slug: "pinecrest-family",
-    title: "Pinecrest Family Campground",
-    city: "Lake Tahoe",
-    state: "CA",
-    stateSlug: "california",
-    location: "Lake Tahoe, CA",
-    price: 2100000,
-    priceDisplay: "$2.1M",
-    acres: 47,
-    type: "campground",
-    summary:
-      "Beloved family campground operating for 30+ years. 80 sites, pool, and recreation hall.",
-    description:
-      "Pinecrest Family Campground is a legacy outdoor hospitality asset on 47 acres near Lake Tahoe. Operating for over three decades, the campground offers 80 sites ranging from tent loops to full-hookup RV pads, a swimming pool, recreation hall, and general store. Multi-generational guest loyalty and proximity to Tahoe recreation create durable demand.",
-    imageSeed: "photo-1576176539998-0237d1ac6a85",
-    featured: true,
-    sites: 80,
-    highlights: [
-      "80 campsites with mixed tent and RV inventory",
-      "30+ years of operating history",
-      "Pool and recreation hall",
-      "General store on-site",
-    ],
-    amenities: [
-      "Swimming pool",
-      "Recreation hall",
-      "General store",
-      "Playground",
-      "Shower houses",
-    ],
-    financials: {
-      grossRevenue: "$1.4M",
-      noi: "$680K",
-      occupancy: "78%",
-    },
-  },
-  {
-    slug: "coastal-pines-nature-resort",
-    title: "Coastal Pines Nature Resort",
-    city: "Olympic Peninsula",
-    state: "WA",
-    stateSlug: "washington",
-    location: "Olympic Peninsula, WA",
-    price: 3400000,
-    priceDisplay: "$3.4M",
-    acres: 112,
-    type: "nature-resort",
-    summary:
-      "Rare 112-acre coastal forest property with 12 cabins and development potential.",
-    description:
-      "Coastal Pines Nature Resort is a rare large-acreage opportunity on Washington's Olympic Peninsula. The property spans 112 acres of coastal forest with 12 custom-built cabins, trail systems, and significant entitlements for additional development. Ideal for an operator seeking a flagship eco-resort or a developer with a long-term hospitality vision.",
-    imageSeed: "photo-1470071459604-3b5ec3a7fe05",
-    featured: true,
-    sites: 12,
-    highlights: [
-      "112 acres of coastal forest",
-      "12 custom cabin units",
-      "Trail network throughout property",
-      "Additional development potential",
-    ],
-    amenities: [
-      "Private trails",
-      "Cabin kitchens",
-      "Fire pits",
-      "Wildlife viewing",
-      "Parking",
-    ],
-    financials: {
-      grossRevenue: "$1.1M",
-      noi: "$520K",
-      occupancy: "61%",
-    },
-  },
-  {
-    slug: "desert-star-glamping",
-    title: "Desert Star Glamping",
-    city: "Sedona",
-    state: "AZ",
-    stateSlug: "arizona",
-    location: "Sedona, AZ",
-    price: 640000,
-    priceDisplay: "$640K",
-    acres: 6,
-    type: "glamping-retreat",
-    summary:
-      "6 custom safari tents on a stunning red rock property. Turnkey and fully booked.",
-    description:
-      "Desert Star Glamping is a boutique glamping operation on 6 acres surrounded by Sedona's iconic red rock formations. Six custom safari tents with premium furnishings, outdoor soaking tubs, and stargazing decks command strong nightly rates. The business is turnkey with existing booking channels, staff, and vendor relationships in place.",
-    imageSeed: "photo-1676766268952-f959fff2945b",
-    featured: true,
-    sites: 6,
-    highlights: [
-      "6 custom safari tents",
-      "Red rock views",
-      "Turnkey operations",
-      "Strong booking calendar",
-    ],
-    amenities: [
-      "Outdoor soaking tubs",
-      "Stargazing decks",
-      "Premium furnishings",
-      "Concierge service",
-      "Wi-Fi",
-    ],
-    financials: {
-      grossRevenue: "$480K",
-      noi: "$245K",
-      occupancy: "85%",
-    },
-  },
-  {
-    slug: "lakeside-haven-campground",
-    title: "Lakeside Haven Campground",
-    city: "Boundary Waters",
-    state: "MN",
-    stateSlug: "minnesota",
-    location: "Boundary Waters, MN",
-    price: 990000,
-    priceDisplay: "$990K",
-    acres: 35,
-    type: "campground",
-    summary:
-      "Pristine lakefront campground with canoe access, 60 sites, and strong seasonal revenue.",
-    description:
-      "Lakeside Haven Campground offers 35 acres of lakefront property at the gateway to Minnesota's Boundary Waters Canoe Area. Sixty campsites, canoe rentals, and a camp store serve paddlers and families during peak summer season. The property benefits from limited competition and strong regional demand for authentic wilderness-adjacent camping.",
-    imageSeed: "photo-1472214103451-9374bd1c798e",
-    featured: true,
-    sites: 60,
-    highlights: [
-      "Lakefront with canoe access",
-      "60 campsites",
-      "Canoe rental operation",
-      "Gateway to Boundary Waters",
-    ],
-    amenities: [
-      "Canoe rentals",
-      "Camp store",
-      "Boat launch",
-      "Shower houses",
-      "Firewood sales",
-    ],
-    financials: {
-      grossRevenue: "$720K",
-      noi: "$340K",
-      occupancy: "82%",
-    },
-  },
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
@@ -614,29 +392,8 @@ export function getStateByCode(code: string) {
   return US_STATES.find((s) => s.value === code);
 }
 
-export function getListingBySlug(slug: string): Listing | undefined {
-  return LISTINGS.find((l) => l.slug === slug);
-}
-
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
-}
-
-export function getListingsByTypeAndState(
-  type: PropertyType,
-  stateSlug: string
-): Listing[] {
-  return LISTINGS.filter(
-    (l) => l.type === type && l.stateSlug === stateSlug
-  );
-}
-
-export function getUniqueStatesFromListings(): string[] {
-  return [...new Set(LISTINGS.map((l) => l.state))];
-}
-
-export function getListingImageUrl(imageId: string, width = 800, height = 600) {
-  return `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
 }
 
 export function getBlogImageUrl(seed: string, width = 1200, height = 800) {

@@ -4,25 +4,26 @@ import { JsonLd } from "@/components/json-ld";
 import { ListingCard } from "@/components/listing-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ListingInquiryForm } from "@/components/listing-inquiry-form";
 import { Separator } from "@/components/ui/separator";
 import type { Listing } from "@/lib/data";
 import {
-  LISTINGS,
-  getListingImageUrl,
   getPropertyTypeLabel,
 } from "@/lib/data";
+import { getRelatedListings, resolveListingImage } from "@/lib/listings-db";
 import { formatAcres } from "@/lib/format";
 import { breadcrumbJsonLd, realEstateListingJsonLd } from "@/lib/seo";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
 interface ListingDetailContentProps {
   listing: Listing;
+  related?: Listing[];
 }
 
-export function ListingDetailContent({ listing }: ListingDetailContentProps) {
-  const related = LISTINGS.filter(
-    (item) => item.type === listing.type && item.slug !== listing.slug
-  ).slice(0, 3);
+export function ListingDetailContent({
+  listing,
+  related = [],
+}: ListingDetailContentProps) {
 
   return (
     <>
@@ -49,7 +50,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
           <div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-muted">
               <Image
-                src={getListingImageUrl(listing.imageSeed, 1200, 750)}
+                src={resolveListingImage(listing, 1200, 750)}
                 alt={listing.title}
                 fill
                 priority
@@ -168,16 +169,7 @@ export function ListingDetailContent({ listing }: ListingDetailContentProps) {
                 </div>
               )}
 
-              <Button
-                asChild
-                className="mt-6 w-full rounded-full bg-forest hover:bg-forest-light"
-                size="lg"
-              >
-                <Link href="/alerts">Request Information</Link>
-              </Button>
-              <p className="mt-3 text-center text-xs text-muted-foreground">
-                Connect with the listing broker for financials and site visits.
-              </p>
+              <ListingInquiryForm listingTitle={listing.title} />
             </div>
           </aside>
         </div>

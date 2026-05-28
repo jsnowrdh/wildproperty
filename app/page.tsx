@@ -13,7 +13,11 @@ import { JsonLd } from "@/components/json-ld";
 import { ListingCard } from "@/components/listing-card";
 import { NewsletterCta } from "@/components/newsletter-cta";
 import { SearchHero } from "@/components/search-hero";
-import { LISTINGS, PROPERTY_TYPES, getUniqueStatesFromListings } from "@/lib/data";
+import { PROPERTY_TYPES } from "@/lib/data";
+import {
+  getActiveListings,
+  getUniqueStatesFromListings,
+} from "@/lib/listings-db";
 import {
   breadcrumbJsonLd,
   buildMetadata,
@@ -55,9 +59,10 @@ const features = [
   },
 ];
 
-export default function HomePage() {
-  const featured = LISTINGS.filter((l) => l.featured);
-  const stateCount = getUniqueStatesFromListings().length;
+export default async function HomePage() {
+  const listings = await getActiveListings();
+  const featured = listings.filter((listing) => listing.featured);
+  const stateCount = getUniqueStatesFromListings(listings).length;
 
   return (
     <>
@@ -103,7 +108,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-cream/75">
             <span>
-              <span className="font-serif text-cream">{LISTINGS.length}</span>{" "}
+              <span className="font-serif text-cream">{listings.length}</span>{" "}
               Active Listings
             </span>
             <span className="hidden h-4 w-px bg-cream/25 sm:inline-block" />

@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
 import {
   BLOG_POSTS,
-  LISTINGS,
   PROPERTY_TYPES,
   SITE_URL,
   US_STATES,
 } from "@/lib/data";
+import { getActiveListings } from "@/lib/listings-db";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const listings = await getActiveListings();
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -43,9 +44,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const listingPages: MetadataRoute.Sitemap = LISTINGS.map((listing) => ({
+  const listingPages: MetadataRoute.Sitemap = listings.map((listing) => ({
     url: `${SITE_URL}/listings/${listing.slug}`,
-    lastModified: now,
+    lastModified: listing.createdAt ? new Date(listing.createdAt) : now,
     changeFrequency: "weekly",
     priority: 0.8,
   }));

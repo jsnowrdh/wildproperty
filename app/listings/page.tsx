@@ -1,17 +1,19 @@
 import { Suspense } from "react";
 import { JsonLd } from "@/components/json-ld";
 import { ListingsBrowser } from "@/components/listings-browser";
-import { LISTINGS } from "@/lib/data";
+import { getActiveListings } from "@/lib/listings-db";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Outdoor Hospitality Properties For Sale",
+  title: "Browse Properties | WildProperty",
   description:
     "Search campgrounds, glamping retreats, RV parks, and nature resorts for sale across the US. Filter by property type, state, price, and acreage.",
   path: "/listings",
 });
 
-export default function ListingsPage() {
+export default async function ListingsPage() {
+  const listings = await getActiveListings();
+
   return (
     <>
       <JsonLd
@@ -20,18 +22,10 @@ export default function ListingsPage() {
           { name: "Browse Properties", path: "/listings" },
         ])}
       />
-      <Suspense fallback={<ListingsLoading />}>
-        <ListingsBrowser listings={LISTINGS} />
+
+      <Suspense fallback={null}>
+        <ListingsBrowser listings={listings} />
       </Suspense>
     </>
-  );
-}
-
-function ListingsLoading() {
-  return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <div className="mb-3 h-3 w-32 animate-pulse rounded bg-muted" />
-      <div className="h-10 w-64 animate-pulse rounded bg-muted" />
-    </div>
   );
 }

@@ -2,7 +2,6 @@ import type { Listing, PropertyType } from "./data";
 import {
   PROPERTY_TYPES,
   US_STATES,
-  getListingsByTypeAndState,
   getPropertyTypeLabel,
 } from "./data";
 
@@ -481,7 +480,8 @@ export function getAllLocationPageParams(): { type: PropertyType; stateSlug: str
 
 export function generateLocationPageContent(
   type: PropertyType,
-  stateSlug: string
+  stateSlug: string,
+  listings: Listing[] = []
 ): LocationPageContent | null {
   const state = US_STATES.find((s) => s.slug === stateSlug);
   const typeInfo = TYPE_MARKET[type];
@@ -492,9 +492,8 @@ export function generateLocationPageContent(
   }
 
   const typeLabel = getPropertyTypeLabel(type);
-  const listings = getListingsByTypeAndState(type, stateSlug);
-  const path = `/listings/${type}/${stateSlug}`;
   const count = listings.length;
+  const path = `/listings/${type}/${stateSlug}`;
 
   const metaTitle = `${typeInfo.plural} for Sale in ${state.label} | WildProperty`;
   const metaDescription =
@@ -564,11 +563,4 @@ export function generateLocationPageContent(
     relatedTypeLinks,
     relatedStateLinks,
   };
-}
-
-export function getLocationListings(
-  type: PropertyType,
-  stateSlug: string
-): Listing[] {
-  return getListingsByTypeAndState(type, stateSlug);
 }

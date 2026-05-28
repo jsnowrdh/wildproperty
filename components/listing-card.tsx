@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Trees } from "lucide-react";
 import type { Listing } from "@/lib/data";
-import { getListingImageUrl, getPropertyTypeLabel } from "@/lib/data";
+import { getPropertyTypeLabel } from "@/lib/data";
+import { resolveListingImage } from "@/lib/listings-db";
 import { formatAcres } from "@/lib/format";
 
 interface ListingCardProps {
@@ -15,7 +16,7 @@ export function ListingCard({ listing }: ListingCardProps) {
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]">
         <div className="relative aspect-[4/3] overflow-hidden bg-neutral-900">
           <Image
-            src={getListingImageUrl(listing.imageSeed)}
+            src={resolveListingImage(listing)}
             alt={listing.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
