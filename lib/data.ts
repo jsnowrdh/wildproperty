@@ -146,7 +146,7 @@ export const LISTINGS: Listing[] = [
       "Fully operational glamping resort with 14 luxury tents, main lodge, and mountain views.",
     description:
       "Blue Ridge Glamping Retreat is a turnkey luxury outdoor hospitality asset in the heart of the Blue Ridge Mountains near Asheville. The property features 14 fully outfitted safari-style tents with en-suite bathrooms, a central lodge with commercial kitchen and event space, and panoramic mountain views. Strong ADR and occupancy driven by wedding groups, corporate retreats, and leisure travelers seeking a premium nature experience.",
-    imageSeed: "wp12",
+    imageSeed: "photo-1632367294096-4e77d53c4ae9",
     featured: true,
     sites: 14,
     highlights: [
@@ -183,7 +183,7 @@ export const LISTINGS: Listing[] = [
       "45-site RV park along the Deschutes River. Strong occupancy and repeat guest base.",
     description:
       "Riverbend RV Park sits on 8 acres along the Deschutes River in Central Oregon, one of the fastest-growing outdoor recreation markets in the West. The park includes 45 full-hookup sites, a club house, laundry, and river access. Consistent year-round occupancy from snowbirds, fly fishermen, and Bend-area visitors supports stable cash flow.",
-    imageSeed: "wp34",
+    imageSeed: "photo-1441974231531-c6227db76b6e",
     featured: true,
     sites: 45,
     highlights: [
@@ -220,7 +220,7 @@ export const LISTINGS: Listing[] = [
       "Beloved family campground operating for 30+ years. 80 sites, pool, and recreation hall.",
     description:
       "Pinecrest Family Campground is a legacy outdoor hospitality asset on 47 acres near Lake Tahoe. Operating for over three decades, the campground offers 80 sites ranging from tent loops to full-hookup RV pads, a swimming pool, recreation hall, and general store. Multi-generational guest loyalty and proximity to Tahoe recreation create durable demand.",
-    imageSeed: "wp46",
+    imageSeed: "photo-1576176539998-0237d1ac6a85",
     featured: true,
     sites: 80,
     highlights: [
@@ -257,7 +257,7 @@ export const LISTINGS: Listing[] = [
       "Rare 112-acre coastal forest property with 12 cabins and development potential.",
     description:
       "Coastal Pines Nature Resort is a rare large-acreage opportunity on Washington's Olympic Peninsula. The property spans 112 acres of coastal forest with 12 custom-built cabins, trail systems, and significant entitlements for additional development. Ideal for an operator seeking a flagship eco-resort or a developer with a long-term hospitality vision.",
-    imageSeed: "wp58",
+    imageSeed: "photo-1470071459604-3b5ec3a7fe05",
     featured: true,
     sites: 12,
     highlights: [
@@ -294,7 +294,7 @@ export const LISTINGS: Listing[] = [
       "6 custom safari tents on a stunning red rock property. Turnkey and fully booked.",
     description:
       "Desert Star Glamping is a boutique glamping operation on 6 acres surrounded by Sedona's iconic red rock formations. Six custom safari tents with premium furnishings, outdoor soaking tubs, and stargazing decks command strong nightly rates. The business is turnkey with existing booking channels, staff, and vendor relationships in place.",
-    imageSeed: "wp60",
+    imageSeed: "photo-1676766268952-f959fff2945b",
     featured: true,
     sites: 6,
     highlights: [
@@ -331,7 +331,7 @@ export const LISTINGS: Listing[] = [
       "Pristine lakefront campground with canoe access, 60 sites, and strong seasonal revenue.",
     description:
       "Lakeside Haven Campground offers 35 acres of lakefront property at the gateway to Minnesota's Boundary Waters Canoe Area. Sixty campsites, canoe rentals, and a camp store serve paddlers and families during peak summer season. The property benefits from limited competition and strong regional demand for authentic wilderness-adjacent camping.",
-    imageSeed: "wp72",
+    imageSeed: "photo-1472214103451-9374bd1c798e",
     featured: true,
     sites: 60,
     highlights: [
@@ -412,8 +412,8 @@ export function getUniqueStatesFromListings(): string[] {
   return [...new Set(LISTINGS.map((l) => l.state))];
 }
 
-export function getListingImageUrl(seed: string, width = 800, height = 600) {
-  return `https://picsum.photos/seed/${seed}/${width}/${height}`;
+export function getListingImageUrl(imageId: string, width = 800, height = 600) {
+  return `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
 }
 
 export function getBlogImageUrl(seed: string, width = 1200, height = 800) {
