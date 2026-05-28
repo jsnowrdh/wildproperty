@@ -3,21 +3,27 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { JsonLd } from "@/components/json-ld";
 import { ListingDetailContent } from "@/components/listing-detail-content";
+import { LocationPageSections } from "@/components/location-page-sections";
 import { ListingsBrowser } from "@/components/listings-browser";
 import {
   LISTINGS,
-  PROPERTY_TYPES,
   getListingBySlug,
   getListingImageUrl,
-  getListingsByTypeAndState,
   getPropertyTypeLabel,
   getStateBySlug,
 } from "@/lib/data";
+import {
+  generateLocationPageContent,
+  getAllLocationPageParams,
+  getLocationListings,
+  isValidPropertyTypeSlug,
+} from "@/lib/location-pages";
 import {
   breadcrumbJsonLd,
   buildMetadata,
   listingDetailDescription,
   listingDetailTitle,
+  locationPageJsonLd,
 } from "@/lib/seo";
 
 interface PageProps {
@@ -29,18 +35,9 @@ export async function generateStaticParams() {
     segments: [listing.slug],
   }));
 
-  const locationParams: { segments: string[] }[] = [];
-  const seen = new Set<string>();
-
-  LISTINGS.forEach((listing) => {
-    const key = `${listing.type}:${listing.stateSlug}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      locationParams.push({
-        segments: [listing.type, listing.stateSlug],
-      });
-    }
-  });
+  const locationParams = getAllLocationPageParams().map(({ type, stateSlug }) => ({
+    segments: [type, stateSlug],
+  }));
 
   return [...listingParams, ...locationParams];
 }
@@ -65,20 +62,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (segments.length === 2) {
     const [type, state] = segments;
-    const propertyType = PROPERTY_TYPES.find((item) => item.slug === type);
-    const stateInfo = getStateBySlug(state);
 
-    if (!propertyType || !stateInfo) {
+    if (!isValidPropertyTypeSlug(type)) {
       return { title: "Page Not Found" };
     }
 
-    const title = `${propertyType.label}s for Sale in ${stateInfo.label}`;
-    const description = `Browse ${propertyType.label.toLowerCase()}s for sale in ${stateInfo.label}. Filter by price and acreage on WildProperty.`;
+    const content = generateLocationPageContent(type, state);
+    if (!content) {
+      return { title: "Page Not Found" };
+    }
 
     return buildMetadata({
-      title,
-      description,
-      path: `/listings/${type}/${state}`,
+      title: content.metaTitle,
+      description: content.metaDescription,
+      path: content.path,
     });
   }
 
@@ -98,50 +95,56 @@ export default async function ListingsCatchAllPage({ params }: PageProps) {
 
   if (segments.length === 2) {
     const [type, state] = segments;
-    const propertyType = PROPERTY_TYPES.find((item) => item.slug === type);
-    const stateInfo = getStateBySlug(state);
 
-    if (!propertyType || !stateInfo) {
+    if (!isValidPropertyTypeSlug(type)) {
       notFound();
     }
 
-    const listings = getListingsByTypeAndState(
-      propertyType.slug,
-      stateInfo.slug
-    );
+    const stateInfo = getStateBySlug(state);
+    const content = generateLocationPageContent(type, state);
 
-    const title = `${propertyType.label}s for Sale in ${stateInfo.label}`;
-    const subtitle =
-      listings.length > 0
-        ? `${listings.length} ${listings.length === 1 ? "property" : "properties"} in ${stateInfo.label}`
-        : `No active ${propertyType.label.toLowerCase()} listings in ${stateInfo.label} right now`;
+    if (!stateInfo || !content) {
+      notFound();
+    }
+
+    const listings = getLocationListings(type, state);
 
     return (
       <>
         <JsonLd
-          data={breadcrumbJsonLd([
-            { name: "Home", path: "/" },
-            { name: "Browse Properties", path: "/listings" },
-            {
-              name: getPropertyTypeLabel(propertyType.slug),
-              path: `/listings?type=${propertyType.slug}`,
-            },
-            {
-              name: stateInfo.label,
-              path: `/listings/${type}/${state}`,
-            },
-          ])}
+          data={[
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Browse Properties", path: "/listings" },
+              {
+                name: getPropertyTypeLabel(type),
+                path: `/listings?type=${type}`,
+              },
+              {
+                name: stateInfo.label,
+                path: content.path,
+              },
+            ]),
+            ...locationPageJsonLd({
+              title: content.h1,
+              description: content.metaDescription,
+              path: content.path,
+              listings,
+              faq: content.faq,
+            }),
+          ]}
         />
         <Suspense fallback={null}>
           <ListingsBrowser
             listings={listings}
-            initialTypes={[propertyType.slug]}
+            initialTypes={[type]}
             initialState={stateInfo.value}
             showFilters={listings.length > 0}
-            title={title}
-            subtitle={subtitle}
+            title={content.h1}
+            subtitle={content.subtitle}
           />
         </Suspense>
+        <LocationPageSections content={content} />
       </>
     );
   }

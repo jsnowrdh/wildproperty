@@ -17,17 +17,20 @@ export function buildMetadata({
   description,
   path,
   openGraph,
+  keywords,
 }: {
   title: string;
   description: string;
   path: string;
   openGraph?: Metadata["openGraph"];
+  keywords?: string[];
 }): Metadata {
   const url = absoluteUrl(path);
 
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: url,
     },
@@ -127,6 +130,7 @@ export function blogPostJsonLd(post: BlogPost) {
     headline: post.title,
     description: post.excerpt,
     datePublished: post.publishedAt,
+    keywords: post.keyword,
     image: getBlogImageUrl(post.imageSeed),
     author: {
       "@type": "Organization",
@@ -153,6 +157,7 @@ export function buildBlogPostMetadata(post: BlogPost): Metadata {
       publishedTime: post.publishedAt,
       images: [{ url: image, width: 1200, height: 800, alt: post.title }],
     },
+    keywords: [post.keyword, "outdoor hospitality", "WildProperty"],
   });
 }
 
@@ -162,4 +167,64 @@ export function listingDetailTitle(listing: Listing): string {
 
 export function listingDetailDescription(listing: Listing): string {
   return `${listing.summary} Asking ${listing.priceDisplay} for ${listing.acres} acres in ${listing.location}.`;
+}
+
+export function locationPageJsonLd({
+  title,
+  description,
+  path,
+  listings,
+  faq,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  listings: Listing[];
+  faq: { question: string; answer: string }[];
+}) {
+  const url = absoluteUrl(path);
+
+  const schemas: Record<string, unknown>[] = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: title,
+      description,
+      url,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "WildProperty",
+        url: SITE_URL,
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    },
+  ];
+
+  if (listings.length > 0) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: title,
+      numberOfItems: listings.length,
+      itemListElement: listings.map((listing, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/listings/${listing.slug}`),
+        name: listing.title,
+      })),
+    });
+  }
+
+  return schemas;
 }

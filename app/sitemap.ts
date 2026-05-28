@@ -4,6 +4,7 @@ import {
   LISTINGS,
   PROPERTY_TYPES,
   SITE_URL,
+  US_STATES,
 } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -50,29 +51,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const locationPages: MetadataRoute.Sitemap = [];
-  const seen = new Set<string>();
-
-  LISTINGS.forEach((listing) => {
-    const key = `${listing.type}:${listing.stateSlug}`;
-    if (!seen.has(key)) {
-      seen.add(key);
+  for (const type of PROPERTY_TYPES) {
+    for (const state of US_STATES) {
       locationPages.push({
-        url: `${SITE_URL}/listings/${listing.type}/${listing.stateSlug}`,
+        url: `${SITE_URL}/listings/${type.slug}/${state.slug}`,
         lastModified: now,
         changeFrequency: "weekly",
-        priority: 0.7,
+        priority: 0.6,
       });
     }
-  });
-
-  PROPERTY_TYPES.forEach((type) => {
-    locationPages.push({
-      url: `${SITE_URL}/listings?type=${type.slug}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    });
-  });
+  }
 
   const blogPages: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,

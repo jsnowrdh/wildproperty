@@ -35,9 +35,11 @@ export default function BlogIndexPage() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          {BLOG_POSTS.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-          ))}
+          {[...BLOG_POSTS]
+            .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+            .map((post) => (
+              <BlogCard key={post.slug} post={post} />
+            ))}
         </div>
       </section>
     </>
