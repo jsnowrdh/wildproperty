@@ -118,18 +118,21 @@ export function ListingForm({
 
       const result = await saveListingAction(payload, initialListing?.id);
 
-      if (!result.success) {
+      if (!result?.success) {
         setStatus("error");
-        setErrorMessage(result.error);
+        setErrorMessage(result?.error ?? "Failed to save listing.");
         return;
       }
 
       router.push("/admin/listings");
       router.refresh();
     } catch (error) {
+      console.error("[ListingForm] submit error:", error);
       setStatus("error");
       setErrorMessage(
-        error instanceof Error ? error.message : "Failed to save listing."
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Check Vercel logs for details."
       );
     }
   }

@@ -1,52 +1,106 @@
 "use server";
 
+import { cookies } from "next/headers";
 import {
+  ADMIN_AUTH_COOKIE,
   isAdminAuthenticated,
-  resolveAdminAuth,
 } from "@/lib/admin-auth";
-import { createListing, deleteListing, updateListing } from "@/lib/listings-db";
+import type { DbListingInsert } from "@/lib/database.types";
 import {
   buildListingInsertPayload,
   validateListingInsertPayload,
 } from "@/lib/listings-schema";
-import { toErrorMessage } from "@/lib/supabase-error";
+import { formatSupabaseError } from "@/lib/supabase-error";
+import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export type SaveListingResult =
   | { success: true }
   | { success: false; error: string };
 
-async function assertAdmin() {
-  const auth = await resolveAdminAuth();
-  if (!isAdminAuthenticated(auth)) {
-    throw new Error("Unauthorized. Please log in again.");
+async function checkAdminAuth(): Promise<string | null> {
+  try {
+    const cookieStore = await cookies();
+    const auth = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
+
+    if (!isAdminAuthenticated(auth)) {
+      return "Unauthorized. Please log in again.";
+    }
+
+    return null;
+  } catch (error) {
+    console.error("[checkAdminAuth] error:", error);
+    return formatSupabaseError(error, "Failed to verify admin session.");
   }
+}
+
+function logEnvStatus(context: string) {
+  console.log(`[${context}] Supabase env:`, {
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? "set"
+      : "MISSING",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      ? "set"
+      : "MISSING",
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? "set"
+      : "MISSING",
+  });
 }
 
 export async function saveListingAction(
   rawBody: Record<string, unknown>,
   listingId?: string
 ): Promise<SaveListingResult> {
-  try {
-    await assertAdmin();
+  logEnvStatus("saveListingAction");
 
+  const authError = await checkAdminAuth();
+  if (authError) {
+    return { success: false, error: authError };
+  }
+
+  try {
     const input = buildListingInsertPayload(rawBody);
+    console.log("[saveListingAction] insert payload:", input);
+
     const validationError = validateListingInsertPayload(input);
     if (validationError) {
       return { success: false, error: validationError };
     }
 
+    const supabase = requireSupabaseAdminClient();
+
     if (listingId) {
-      await updateListing(listingId, input);
+      const { error } = await supabase
+        .from("listings")
+        .update(input as DbListingInsert)
+        .eq("id", listingId);
+
+      if (error) {
+        console.error("[saveListingAction] Supabase update error:", error);
+        return {
+          success: false,
+          error: formatSupabaseError(error, "Failed to update listing."),
+        };
+      }
     } else {
-      await createListing(input);
+      const { error } = await supabase.from("listings").insert(input);
+
+      if (error) {
+        console.error("[saveListingAction] Supabase insert error:", error);
+        return {
+          success: false,
+          error: formatSupabaseError(error, "Failed to create listing."),
+        };
+      }
     }
 
+    console.log("[saveListingAction] success");
     return { success: true };
   } catch (error) {
-    console.error("[saveListingAction] error:", error);
+    console.error("[saveListingAction] unexpected error:", error);
     return {
       success: false,
-      error: toErrorMessage(error, "Failed to save listing."),
+      error: formatSupabaseError(error, "Failed to save listing."),
     };
   }
 }
@@ -54,15 +108,29 @@ export async function saveListingAction(
 export async function deleteListingAction(
   id: string
 ): Promise<SaveListingResult> {
+  const authError = await checkAdminAuth();
+  if (authError) {
+    return { success: false, error: authError };
+  }
+
   try {
-    await assertAdmin();
-    await deleteListing(id);
+    const supabase = requireSupabaseAdminClient();
+    const { error } = await supabase.from("listings").delete().eq("id", id);
+
+    if (error) {
+      console.error("[deleteListingAction] Supabase error:", error);
+      return {
+        success: false,
+        error: formatSupabaseError(error, "Failed to delete listing."),
+      };
+    }
+
     return { success: true };
   } catch (error) {
-    console.error("[deleteListingAction] error:", error);
+    console.error("[deleteListingAction] unexpected error:", error);
     return {
       success: false,
-      error: toErrorMessage(error, "Failed to delete listing."),
+      error: formatSupabaseError(error, "Failed to delete listing."),
     };
   }
 }

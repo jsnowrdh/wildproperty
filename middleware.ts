@@ -7,10 +7,19 @@ import {
 
 const PUBLIC_ADMIN_PATHS = ["/admin/login"];
 
+function isServerActionRequest(request: NextRequest): boolean {
+  return request.headers.has("next-action");
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // API routes validate auth in their own handlers (cookies() + Request headers).
+  // Server Actions POST to the page URL — never redirect (returns HTML → "unexpected response").
+  // Auth is validated inside the action via cookies().
+  if (isServerActionRequest(request)) {
+    return NextResponse.next();
+  }
+
   if (pathname.startsWith("/api/admin")) {
     return NextResponse.next();
   }
