@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { saveListingAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,41 +98,34 @@ export function ListingForm({
     setStatus("loading");
     setErrorMessage("");
 
-    const payload = {
-      ...values,
-      price: Number(values.price),
-      acreage: Number(values.acreage),
-      sites: values.sites ? Number(values.sites) : null,
-      gross_revenue: values.gross_revenue || null,
-      noi: values.noi || null,
-      occupancy: values.occupancy || null,
-    };
-
     try {
-      const response = await fetch(
-        initialListing?.id
-          ? `/api/admin/listings/${initialListing.id}`
-          : "/api/admin/listings",
+      await saveListingAction(
         {
-          method: initialListing?.id ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
+          slug: values.slug.trim(),
+          title: values.title.trim(),
+          type: values.type.trim(),
+          city: values.city.trim(),
+          state: values.state.trim().toUpperCase(),
+          price: Number(values.price),
+          acreage: Number(values.acreage),
+          description: values.description.trim(),
+          sites: values.sites ? Number(values.sites) : null,
+          gross_revenue: values.gross_revenue.trim() || null,
+          noi: values.noi.trim() || null,
+          occupancy: values.occupancy.trim() || null,
+          image_url: values.image_url.trim(),
+          status: values.status.trim() || "active",
+        },
+        initialListing?.id
       );
-
-      const data = (await response.json()) as { error?: string };
-
-      if (!response.ok) {
-        setStatus("error");
-        setErrorMessage(data.error ?? "Failed to save listing.");
-        return;
-      }
 
       router.push("/admin/listings");
       router.refresh();
-    } catch {
+    } catch (error) {
       setStatus("error");
-      setErrorMessage("Failed to save listing.");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Failed to save listing."
+      );
     }
   }
 

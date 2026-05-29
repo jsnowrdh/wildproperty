@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { DbListingInsert } from "@/lib/database.types";
-import { createListing, getAllListingsAdmin } from "@/lib/listings-db";
+import { getAllListingsAdmin, mapDbListingToListing } from "@/lib/listings-db";
+import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export async function GET() {
   try {
@@ -8,10 +9,10 @@ export async function GET() {
     return NextResponse.json({ listings });
   } catch (error) {
     console.error("Admin listings GET error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch listings." },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch listings.";
+    const status = message.includes("not configured") ? 503 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 
@@ -36,7 +37,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const listing = await createListing({
+    const input: DbListingInsert = {
       slug: body.slug.trim(),
       title: body.title.trim(),
       type: body.type.trim(),
@@ -51,14 +52,26 @@ export async function POST(request: Request) {
       occupancy: body.occupancy?.trim() || null,
       image_url: body.image_url.trim(),
       status: body.status?.trim() || "active",
-    });
+    };
 
-    return NextResponse.json({ listing }, { status: 201 });
+    const supabase = requireSupabaseAdminClient();
+    const { data, error } = await supabase
+      .from("listings")
+      .insert(input)
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json(
+      { listing: mapDbListingToListing(data) },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Admin listings POST error:", error);
-    return NextResponse.json(
-      { error: "Failed to create listing." },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to create listing.";
+    const status = message.includes("not configured") ? 503 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }

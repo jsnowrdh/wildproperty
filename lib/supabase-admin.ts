@@ -16,3 +16,15 @@ export function createSupabaseAdminClient(): SupabaseClient<Database> | null {
     },
   });
 }
+
+export function requireSupabaseAdminClient(): SupabaseClient<Database> {
+  const client = createSupabaseAdminClient();
+
+  if (!client) {
+    throw new Error(
+      "Supabase admin client is not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+    );
+  }
+
+  return client;
+}

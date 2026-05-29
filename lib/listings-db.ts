@@ -3,7 +3,7 @@ import type { Listing, PropertyType } from "@/lib/data";
 import { getStateByCode } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import { createSupabaseClient } from "@/lib/supabase";
-import { createSupabaseAdminClient } from "@/lib/supabase-admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
 function summarize(description: string): string {
   if (description.length <= 160) return description;
@@ -64,8 +64,7 @@ export async function getActiveListings(): Promise<Listing[]> {
 }
 
 export async function getAllListingsAdmin(): Promise<Listing[]> {
-  const supabase = createSupabaseAdminClient() ?? createSupabaseClient();
-  if (!supabase) return [];
+  const supabase = requireSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("listings")
@@ -100,8 +99,7 @@ export async function getListingBySlug(slug: string): Promise<Listing | null> {
 }
 
 export async function getListingByIdAdmin(id: string): Promise<Listing | null> {
-  const supabase = createSupabaseAdminClient() ?? createSupabaseClient();
-  if (!supabase) return null;
+  const supabase = requireSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("listings")
@@ -142,10 +140,7 @@ export function getUniqueStatesFromListings(listings: Listing[]): string[] {
 }
 
 export async function createListing(input: DbListingInsert) {
-  const supabase = createSupabaseAdminClient();
-  if (!supabase) {
-    throw new Error("Supabase admin client is not configured.");
-  }
+  const supabase = requireSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("listings")
@@ -158,10 +153,7 @@ export async function createListing(input: DbListingInsert) {
 }
 
 export async function updateListing(id: string, input: Partial<DbListingInsert>) {
-  const supabase = createSupabaseAdminClient();
-  if (!supabase) {
-    throw new Error("Supabase admin client is not configured.");
-  }
+  const supabase = requireSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("listings")
@@ -175,10 +167,7 @@ export async function updateListing(id: string, input: Partial<DbListingInsert>)
 }
 
 export async function deleteListing(id: string) {
-  const supabase = createSupabaseAdminClient();
-  if (!supabase) {
-    throw new Error("Supabase admin client is not configured.");
-  }
+  const supabase = requireSupabaseAdminClient();
 
   const { error } = await supabase.from("listings").delete().eq("id", id);
   if (error) throw error;

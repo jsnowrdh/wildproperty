@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { deleteListingAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@/lib/data";
 import { getPropertyTypeLabel } from "@/lib/data";
@@ -23,19 +24,12 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
     setError("");
 
     try {
-      const response = await fetch(`/api/admin/listings/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const data = (await response.json()) as { error?: string };
-        setError(data.error ?? "Failed to delete listing.");
-        return;
-      }
-
+      await deleteListingAction(id);
       router.refresh();
-    } catch {
-      setError("Failed to delete listing.");
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Failed to delete listing."
+      );
     } finally {
       setDeletingId(null);
     }
