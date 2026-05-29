@@ -185,7 +185,9 @@ export function resolveListingImage(
   width = 800,
   height = 600
 ): string {
-  const url = listing.imageUrl;
+  const fallback = `https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
+  const url = listing.imageUrl?.trim();
+  if (!url) return fallback;
   if (url.startsWith("http")) return url;
   if (url.startsWith("photo-")) {
     return `https://images.unsplash.com/${url}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;

@@ -8,11 +8,9 @@ import { ListingsBrowser } from "@/components/listings-browser";
 import { getPropertyTypeLabel, getStateBySlug } from "@/lib/data";
 import {
   generateLocationPageContent,
-  getAllLocationPageParams,
   isValidPropertyTypeSlug,
 } from "@/lib/location-pages";
 import {
-  getActiveListings,
   getListingBySlug,
   getListingsByTypeAndState,
   getRelatedListings,
@@ -30,27 +28,22 @@ interface PageProps {
   params: Promise<{ segments: string[] }>;
 }
 
-export async function generateStaticParams() {
-  const listings = await getActiveListings();
-  const listingParams = listings.map((listing) => ({
-    segments: [listing.slug],
-  }));
-
-  const locationParams = getAllLocationPageParams().map(({ type, stateSlug }) => ({
-    segments: [type, stateSlug],
-  }));
-
-  return [...listingParams, ...locationParams];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { segments } = await params;
 
   if (segments.length === 1) {
-    const listing = await getListingBySlug(segments[0]);
+    const slug = segments[0];
+    if (!slug) {
+      return { title: "Listing Not Found" };
+    }
+
+    const listing = await getListingBySlug(slug);
     if (!listing) {
       return { title: "Listing Not Found" };
     }
+
     return buildMetadata({
       title: listingDetailTitle(listing),
       description: listingDetailDescription(listing),
