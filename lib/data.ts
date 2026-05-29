@@ -254,7 +254,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Financing Guide",
     publishedAt: "2026-05-09",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1517824804614-a5798a331458"),
+    imageUrl: unsplash("photo-1535223289827-42f1e9919769"),
     keyword: "sba loan campground",
   },
   {
@@ -287,7 +287,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-12",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-147813394188826-12155eb24712"),
+    imageUrl: unsplash("photo-1528605248644-14dd04022da1"),
     keyword: "campground due diligence",
   },
   {
@@ -320,7 +320,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-15",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1475483766626-983a0374a357"),
+    imageUrl: unsplash("photo-1445308394109-4ec2920981b1"),
     keyword: "campground cap rate",
   },
   {
@@ -342,7 +342,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-17",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1523987353454-67242789aa4a"),
+    imageUrl: unsplash("photo-1558618666-fcd25c85cd64"),
     keyword: "how to value an rv park",
   },
   {
@@ -353,7 +353,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-18",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1582719508461-905c674771a7"),
+    imageUrl: unsplash("photo-1611273426858-450d8e3c9fce"),
     keyword: "glamping retreat operating costs",
   },
   {
@@ -364,7 +364,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-19",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1487730116645-99d3fdae8b82"),
+    imageUrl: unsplash("photo-1469854523086-cc02fe5d8800"),
     keyword: "campground buying process timeline",
   },
   {
@@ -386,7 +386,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-21",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1506905925346-be42c7f70a1f"),
+    imageUrl: unsplash("photo-1544551763-46a013bb70d5"),
     keyword: "is buying a campground a good investment",
   },
   {
@@ -398,7 +398,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-22",
     readTime: "5 min read",
-    imageUrl: unsplash("photo-1566073778509-1644f429a411"),
+    imageUrl: unsplash("photo-1571896349842-33c89424de2d"),
     keyword: "campground vs glamping investment",
   },
 ];
