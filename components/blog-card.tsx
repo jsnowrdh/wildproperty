@@ -17,7 +17,7 @@ export function BlogCard({ post }: BlogCardProps) {
     >
       <div className="aspect-[16/10] overflow-hidden">
         <Image
-          src={getBlogImageUrl(post.imageSeed)}
+          src={getBlogImageUrl(post.imageUrl)}
           alt={post.title}
           width={1200}
           height={800}

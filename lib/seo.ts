@@ -127,7 +127,7 @@ export function blogPostJsonLd(post: BlogPost) {
     description: post.excerpt,
     datePublished: post.publishedAt,
     keywords: post.keyword,
-    image: getBlogImageUrl(post.imageSeed),
+    image: getBlogImageUrl(post.imageUrl),
     author: {
       "@type": "Organization",
       name: "WildProperty",
@@ -142,7 +142,7 @@ export function blogPostJsonLd(post: BlogPost) {
 }
 
 export function buildBlogPostMetadata(post: BlogPost): Metadata {
-  const image = getBlogImageUrl(post.imageSeed);
+  const image = getBlogImageUrl(post.imageUrl);
 
   return buildMetadata({
     title: `${post.title} | WildProperty`,

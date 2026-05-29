@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
 
         <Image
-          src={getBlogImageUrl(post.imageSeed)}
+          src={getBlogImageUrl(post.imageUrl, 1200)}
           alt={post.title}
           width={1200}
           height={675}
