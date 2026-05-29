@@ -1,10 +1,5 @@
 "use server";
 
-import { cookies } from "next/headers";
-import {
-  ADMIN_AUTH_COOKIE,
-  isAdminAuthenticated,
-} from "@/lib/admin-auth";
 import type { DbListingInsert } from "@/lib/database.types";
 import {
   buildListingInsertPayload,
@@ -16,22 +11,6 @@ import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 export type SaveListingResult =
   | { success: true }
   | { success: false; error: string };
-
-async function checkAdminAuth(): Promise<string | null> {
-  try {
-    const cookieStore = await cookies();
-    const auth = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
-
-    if (!isAdminAuthenticated(auth)) {
-      return "Unauthorized. Please log in again.";
-    }
-
-    return null;
-  } catch (error) {
-    console.error("[checkAdminAuth] error:", error);
-    return formatSupabaseError(error, "Failed to verify admin session.");
-  }
-}
 
 function logEnvStatus(context: string) {
   console.log(`[${context}] Supabase env:`, {
@@ -52,11 +31,6 @@ export async function saveListingAction(
   listingId?: string
 ): Promise<SaveListingResult> {
   logEnvStatus("saveListingAction");
-
-  const authError = await checkAdminAuth();
-  if (authError) {
-    return { success: false, error: authError };
-  }
 
   try {
     const input = buildListingInsertPayload(rawBody);
@@ -108,11 +82,6 @@ export async function saveListingAction(
 export async function deleteListingAction(
   id: string
 ): Promise<SaveListingResult> {
-  const authError = await checkAdminAuth();
-  if (authError) {
-    return { success: false, error: authError };
-  }
-
   try {
     const supabase = requireSupabaseAdminClient();
     const { error } = await supabase.from("listings").delete().eq("id", id);
