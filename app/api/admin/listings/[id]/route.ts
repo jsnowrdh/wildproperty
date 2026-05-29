@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
-import type { DbListingInsert } from "@/lib/database.types";
-import { mapDbListingToListing } from "@/lib/listings-db";
+import { requireAdminAuth } from "@/lib/admin-auth";
+import {
+  buildListingInsertPayload,
+  logSupabaseEnvStatus,
+  validateListingInsertPayload,
+} from "@/lib/listings-schema";
+import { toErrorMessage } from "@/lib/supabase-error";
 import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
 interface RouteProps {
@@ -8,59 +13,82 @@ interface RouteProps {
 }
 
 export async function PUT(request: Request, { params }: RouteProps) {
+  const authError = await requireAdminAuth(request);
+  if (authError) return authError;
+
+  logSupabaseEnvStatus("admin/listings PUT");
+
   try {
     const { id } = await params;
-    const body = (await request.json()) as Partial<DbListingInsert>;
+    const rawBody = (await request.json()) as Record<string, unknown>;
+    console.log("[admin/listings PUT] id:", id, "body:", rawBody);
+
+    const input = buildListingInsertPayload(rawBody);
+    const validationError = validateListingInsertPayload(input);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
+    }
 
     const supabase = requireSupabaseAdminClient();
     const { data, error } = await supabase
       .from("listings")
-      .update({
-        ...body,
-        slug: body.slug?.trim(),
-        title: body.title?.trim(),
-        type: body.type?.trim(),
-        city: body.city?.trim(),
-        state: body.state?.trim().toUpperCase(),
-        price: body.price !== undefined ? Number(body.price) : undefined,
-        acreage: body.acreage !== undefined ? Number(body.acreage) : undefined,
-        description: body.description?.trim(),
-        sites: body.sites !== undefined ? Number(body.sites) : undefined,
-        gross_revenue: body.gross_revenue?.trim() || null,
-        noi: body.noi?.trim() || null,
-        occupancy: body.occupancy?.trim() || null,
-        image_url: body.image_url?.trim(),
-        status: body.status?.trim(),
-      })
+      .update(input)
       .eq("id", id)
-      .select("*")
+      .select("id, slug, title")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("[admin/listings PUT] Supabase error:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      return NextResponse.json(
+        { error: error.message, code: error.code, details: error.details },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json({ listing: mapDbListingToListing(data) });
+    return NextResponse.json({ success: true, listing: data });
   } catch (error) {
-    console.error("Admin listings PUT error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to update listing.";
+    console.error("[admin/listings PUT] unexpected error:", error);
+    const message = toErrorMessage(error, "Failed to update listing.");
     const status = message.includes("not configured") ? 503 : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }
 
-export async function DELETE(_request: Request, { params }: RouteProps) {
+export async function DELETE(request: Request, { params }: RouteProps) {
+  const authError = await requireAdminAuth(request);
+  if (authError) return authError;
+
+  logSupabaseEnvStatus("admin/listings DELETE");
+
   try {
     const { id } = await params;
+    console.log("[admin/listings DELETE] id:", id);
+
     const supabase = requireSupabaseAdminClient();
     const { error } = await supabase.from("listings").delete().eq("id", id);
 
-    if (error) throw error;
+    if (error) {
+      console.error("[admin/listings DELETE] Supabase error:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      return NextResponse.json(
+        { error: error.message, code: error.code, details: error.details },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Admin listings DELETE error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to delete listing.";
+    console.error("[admin/listings DELETE] unexpected error:", error);
+    const message = toErrorMessage(error, "Failed to delete listing.");
     const status = message.includes("not configured") ? 503 : 500;
     return NextResponse.json({ error: message }, { status });
   }

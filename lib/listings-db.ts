@@ -2,6 +2,7 @@ import type { DbListing, DbListingInsert } from "@/lib/database.types";
 import type { Listing, PropertyType } from "@/lib/data";
 import { getStateByCode } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
+import { toErrorMessage } from "@/lib/supabase-error";
 import { createSupabaseClient } from "@/lib/supabase";
 import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -148,7 +149,9 @@ export async function createListing(input: DbListingInsert) {
     .select("*")
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw new Error(toErrorMessage(error, "Failed to create listing."));
+  }
   return mapDbListingToListing(data);
 }
 
@@ -162,7 +165,9 @@ export async function updateListing(id: string, input: Partial<DbListingInsert>)
     .select("*")
     .single();
 
-  if (error) throw error;
+  if (error) {
+    throw new Error(toErrorMessage(error, "Failed to update listing."));
+  }
   return mapDbListingToListing(data);
 }
 
@@ -170,7 +175,9 @@ export async function deleteListing(id: string) {
   const supabase = requireSupabaseAdminClient();
 
   const { error } = await supabase.from("listings").delete().eq("id", id);
-  if (error) throw error;
+  if (error) {
+    throw new Error(toErrorMessage(error, "Failed to delete listing."));
+  }
 }
 
 export function resolveListingImage(

@@ -21,6 +21,7 @@ export function AdminLoginForm() {
       const response = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ password }),
       });
 
@@ -32,7 +33,7 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.push("/admin");
+      router.push("/admin/listings/new");
       router.refresh();
     } catch {
       setStatus("error");

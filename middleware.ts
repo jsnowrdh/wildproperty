@@ -5,37 +5,35 @@ import {
   isAdminAuthenticated,
 } from "@/lib/admin-auth";
 
-const PUBLIC_ADMIN_PATHS = ["/admin/login", "/api/admin/login", "/api/admin/logout"];
+const PUBLIC_ADMIN_PATHS = ["/admin/login"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // API routes validate auth in their own handlers (cookies() + Request headers).
+  if (pathname.startsWith("/api/admin")) {
+    return NextResponse.next();
+  }
+
   const authCookie = request.cookies.get(ADMIN_AUTH_COOKIE)?.value;
   const isAuthenticated = isAdminAuthenticated(authCookie);
 
   if (PUBLIC_ADMIN_PATHS.includes(pathname)) {
-    if (pathname === "/admin/login" && isAuthenticated) {
-      return NextResponse.redirect(new URL("/admin", request.url));
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL("/admin/listings/new", request.url));
     }
     return NextResponse.next();
   }
 
-  const isProtectedAdmin =
-    pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
-
-  if (!isProtectedAdmin) {
-    return NextResponse.next();
-  }
-
-  if (!isAuthenticated) {
-    if (pathname.startsWith("/api/admin")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (pathname.startsWith("/admin")) {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin", "/admin/:path*"],
 };

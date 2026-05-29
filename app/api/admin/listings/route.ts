@@ -1,76 +1,76 @@
 import { NextResponse } from "next/server";
-import type { DbListingInsert } from "@/lib/database.types";
-import { getAllListingsAdmin, mapDbListingToListing } from "@/lib/listings-db";
+import { requireAdminAuth } from "@/lib/admin-auth";
+import {
+  buildListingInsertPayload,
+  logSupabaseEnvStatus,
+  validateListingInsertPayload,
+} from "@/lib/listings-schema";
+import { toErrorMessage } from "@/lib/supabase-error";
 import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
+import { getAllListingsAdmin } from "@/lib/listings-db";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const authError = await requireAdminAuth(request);
+  if (authError) return authError;
+
   try {
+    logSupabaseEnvStatus("admin/listings GET");
     const listings = await getAllListingsAdmin();
     return NextResponse.json({ listings });
   } catch (error) {
-    console.error("Admin listings GET error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to fetch listings.";
+    console.error("[admin/listings GET] error:", error);
+    const message = toErrorMessage(error, "Failed to fetch listings.");
     const status = message.includes("not configured") ? 503 : 500;
     return NextResponse.json({ error: message }, { status });
   }
 }
 
 export async function POST(request: Request) {
+  const authError = await requireAdminAuth(request);
+  if (authError) return authError;
+
+  logSupabaseEnvStatus("admin/listings POST");
+
   try {
-    const body = (await request.json()) as DbListingInsert;
+    const rawBody = await request.json();
+    console.log("[admin/listings POST] raw body:", rawBody);
 
-    if (
-      !body.slug?.trim() ||
-      !body.title?.trim() ||
-      !body.type?.trim() ||
-      !body.city?.trim() ||
-      !body.state?.trim() ||
-      body.price === undefined ||
-      body.acreage === undefined ||
-      !body.description?.trim() ||
-      !body.image_url?.trim()
-    ) {
-      return NextResponse.json(
-        { error: "Missing required listing fields." },
-        { status: 400 }
-      );
+    const input = buildListingInsertPayload(
+      rawBody as Record<string, unknown>
+    );
+    console.log("[admin/listings POST] parsed insert payload:", input);
+
+    const validationError = validateListingInsertPayload(input);
+    if (validationError) {
+      console.log("[admin/listings POST] validation failed:", validationError);
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
-
-    const input: DbListingInsert = {
-      slug: body.slug.trim(),
-      title: body.title.trim(),
-      type: body.type.trim(),
-      city: body.city.trim(),
-      state: body.state.trim().toUpperCase(),
-      price: Number(body.price),
-      acreage: Number(body.acreage),
-      description: body.description.trim(),
-      sites: body.sites ? Number(body.sites) : null,
-      gross_revenue: body.gross_revenue?.trim() || null,
-      noi: body.noi?.trim() || null,
-      occupancy: body.occupancy?.trim() || null,
-      image_url: body.image_url.trim(),
-      status: body.status?.trim() || "active",
-    };
 
     const supabase = requireSupabaseAdminClient();
     const { data, error } = await supabase
       .from("listings")
       .insert(input)
-      .select("*")
+      .select("id, slug, title")
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("[admin/listings POST] Supabase insert error:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      return NextResponse.json(
+        { error: error.message, code: error.code, details: error.details },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json(
-      { listing: mapDbListingToListing(data) },
-      { status: 201 }
-    );
+    console.log("[admin/listings POST] insert success:", data);
+    return NextResponse.json({ success: true, listing: data }, { status: 201 });
   } catch (error) {
-    console.error("Admin listings POST error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to create listing.";
+    console.error("[admin/listings POST] unexpected error:", error);
+    const message = toErrorMessage(error, "Failed to create listing.");
     const status = message.includes("not configured") ? 503 : 500;
     return NextResponse.json({ error: message }, { status });
   }
