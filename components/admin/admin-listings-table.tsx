@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { deleteListingAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@/lib/data";
 import { getPropertyTypeLabel } from "@/lib/data";
@@ -23,24 +24,10 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
     setError("");
 
     try {
-      const response = await fetch(`/api/admin/listings/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const result = await deleteListingAction(id);
 
-      let data: { error?: string } = {};
-      try {
-        data = (await response.json()) as { error?: string };
-      } catch {
-        throw new Error(
-          response.status === 401
-            ? "Unauthorized. Please log in again."
-            : "An unexpected response was received from the server."
-        );
-      }
-
-      if (!response.ok) {
-        setError(data.error ?? "Failed to delete listing.");
+      if (!result.success) {
+        setError(result.error);
         return;
       }
 

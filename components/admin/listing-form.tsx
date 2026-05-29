@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { saveListingAction } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -115,50 +116,11 @@ export function ListingForm({
         status: values.status.trim() || "active",
       };
 
-      const response = await fetch(
-        initialListing?.id
-          ? `/api/admin/listings/${initialListing.id}`
-          : "/api/admin/listings",
-        {
-          method: initialListing?.id ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload),
-        }
-      );
+      const result = await saveListingAction(payload, initialListing?.id);
 
-      const rawText = await response.text();
-      let data: { error?: string; details?: string; code?: string } = {};
-
-      if (rawText) {
-        try {
-          data = JSON.parse(rawText) as {
-            error?: string;
-            details?: string;
-            code?: string;
-          };
-        } catch {
-          console.error(
-            "[ListingForm] Non-JSON response:",
-            response.status,
-            rawText.slice(0, 500)
-          );
-          setStatus("error");
-          setErrorMessage(
-            response.status === 401
-              ? "Unauthorized. Please log in again."
-              : `Server returned non-JSON (${response.status}): ${rawText.slice(0, 200)}`
-          );
-          return;
-        }
-      }
-
-      if (!response.ok) {
+      if (!result.success) {
         setStatus("error");
-        const detail = data.details ? ` (${data.details})` : "";
-        setErrorMessage(
-          `${data.error ?? "Failed to save listing."}${detail}`
-        );
+        setErrorMessage(result.error);
         return;
       }
 

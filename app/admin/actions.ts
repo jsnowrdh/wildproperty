@@ -1,30 +1,67 @@
 "use server";
 
-import { cookies } from "next/headers";
 import {
-  ADMIN_AUTH_COOKIE,
   isAdminAuthenticated,
+  resolveAdminAuth,
 } from "@/lib/admin-auth";
-import { deleteListing } from "@/lib/listings-db";
+import { createListing, deleteListing, updateListing } from "@/lib/listings-db";
+import {
+  buildListingInsertPayload,
+  validateListingInsertPayload,
+} from "@/lib/listings-schema";
 import { toErrorMessage } from "@/lib/supabase-error";
 
-async function assertAdmin() {
-  const cookieStore = await cookies();
-  const auth = cookieStore.get(ADMIN_AUTH_COOKIE)?.value;
+export type SaveListingResult =
+  | { success: true }
+  | { success: false; error: string };
 
+async function assertAdmin() {
+  const auth = await resolveAdminAuth();
   if (!isAdminAuthenticated(auth)) {
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized. Please log in again.");
   }
 }
 
-export async function deleteListingAction(id: string) {
+export async function saveListingAction(
+  rawBody: Record<string, unknown>,
+  listingId?: string
+): Promise<SaveListingResult> {
+  try {
+    await assertAdmin();
+
+    const input = buildListingInsertPayload(rawBody);
+    const validationError = validateListingInsertPayload(input);
+    if (validationError) {
+      return { success: false, error: validationError };
+    }
+
+    if (listingId) {
+      await updateListing(listingId, input);
+    } else {
+      await createListing(input);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("[saveListingAction] error:", error);
+    return {
+      success: false,
+      error: toErrorMessage(error, "Failed to save listing."),
+    };
+  }
+}
+
+export async function deleteListingAction(
+  id: string
+): Promise<SaveListingResult> {
   try {
     await assertAdmin();
     await deleteListing(id);
-    return { success: true as const };
+    return { success: true };
   } catch (error) {
+    console.error("[deleteListingAction] error:", error);
     return {
-      success: false as const,
+      success: false,
       error: toErrorMessage(error, "Failed to delete listing."),
     };
   }
