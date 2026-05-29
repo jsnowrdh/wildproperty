@@ -45,24 +45,24 @@ export interface BlogPost {
 
 export const SITE_URL = "https://wildproperty.org";
 
-/** Canonical cover URLs by blog topic */
+/** Canonical cover URLs by blog topic (from Unsplash photo pages) */
 export const BLOG_TOPIC_IMAGES = {
   campground:
-    "https://images.unsplash.com/photo-GBge7SmueNE?w=800&q=80",
+    "https://images.unsplash.com/photo-1776983585302-21fbf91e5a6f?w=800&q=80",
   glamping:
-    "https://images.unsplash.com/photo-AZDyU1hXtCE?w=800&q=80",
+    "https://images.unsplash.com/photo-1697462248369-254119899872?w=800&q=80",
   rvPark:
-    "https://images.unsplash.com/photo-yu2Ay7LQmnY?w=800&q=80",
+    "https://images.unsplash.com/photo-1619317190381-643a6b28d6e6?w=800&q=80",
   nature:
-    "https://images.unsplash.com/photo-Kb53YZ99VYU?w=800&q=80",
+    "https://images.unsplash.com/photo-1778075722271-a405ca04b190?w=800&q=80",
   buyingInvestment:
-    "https://images.unsplash.com/photo-TcgASSD5G04?w=800&q=80",
+    "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800&q=80",
   financing:
-    "https://images.unsplash.com/photo-NpTbVOkkom8?w=800&q=80",
+    "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=800&q=80",
   dueDiligence:
-    "https://images.unsplash.com/photo-zCnOv_jlbiw?w=800&q=80",
+    "https://images.unsplash.com/photo-1562877731-8f4187b73b14?w=800&q=80",
   operations:
-    "https://images.unsplash.com/photo-vTFwzetGpwU?w=800&q=80",
+    "https://images.unsplash.com/photo-1568576550491-185584b2145a?w=800&q=80",
 } as const;
 
 export const PROPERTY_TYPES: {
