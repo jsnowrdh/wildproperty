@@ -45,6 +45,16 @@ export interface BlogPost {
 
 export const SITE_URL = "https://wildproperty.org";
 
+/** Working Unsplash cover images by blog topic */
+export const BLOG_COVER_IMAGES = {
+  campground: "photo-1504280390367-361c6d9f38f4",
+  glamping: "photo-1533473359331-0135ef1b58bf",
+  rvPark: "photo-1523987355523-c7b5b0dd90a7",
+  nature: "photo-1441974231531-c6227db76b6e",
+  investment: "photo-1579621970563-ebec7560ff3e",
+  buyingGuide: "photo-1486325212027-8081e485255e",
+} as const;
+
 export const PROPERTY_TYPES: {
   value: PropertyType | "all";
   label: string;
@@ -143,7 +153,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-01",
     readTime: "5 min read",
-    imageSeed: "photo-1523987353454-67242789aa4a",
+    imageSeed: BLOG_COVER_IMAGES.buyingGuide,
     keyword: "how to buy a campground",
   },
   {
@@ -154,7 +164,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-02",
     readTime: "5 min read",
-    imageSeed: "photo-1469853087815-0aee0616a8c9",
+    imageSeed: BLOG_COVER_IMAGES.rvPark,
     keyword: "how to buy an rv park",
   },
   {
@@ -165,7 +175,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-03",
     readTime: "5 min read",
-    imageSeed: "photo-1632367294096-4e77d53c4ae9",
+    imageSeed: BLOG_COVER_IMAGES.glamping,
     keyword: "glamping retreat ROI",
   },
   {
@@ -176,7 +186,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-04",
     readTime: "5 min read",
-    imageSeed: "photo-1576176539998-0237d1ac6a85",
+    imageSeed: BLOG_COVER_IMAGES.campground,
     keyword: "campground valuation",
   },
   {
@@ -187,7 +197,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-05",
     readTime: "5 min read",
-    imageSeed: "photo-1533634686746-ba273e394813",
+    imageSeed: BLOG_COVER_IMAGES.rvPark,
     keyword: "cost of owning an rv park",
   },
   {
@@ -198,7 +208,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-06",
     readTime: "5 min read",
-    imageSeed: "photo-1504851147415-7b939f0dbf97",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "campground vs rv park investment",
   },
   {
@@ -209,7 +219,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Financing Guide",
     publishedAt: "2026-05-07",
     readTime: "5 min read",
-    imageSeed: "photo-1472214103451-9374bd1c798e",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "campground financing",
   },
   {
@@ -220,7 +230,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-08",
     readTime: "5 min read",
-    imageSeed: "photo-1676766268952-f959fff2945b",
+    imageSeed: BLOG_COVER_IMAGES.glamping,
     keyword: "buying a glamping resort",
   },
   {
@@ -231,7 +241,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Financing Guide",
     publishedAt: "2026-05-09",
     readTime: "5 min read",
-    imageSeed: "photo-1517824804614-a5798a331458",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "sba loan campground",
   },
   {
@@ -242,7 +252,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Market Guide",
     publishedAt: "2026-05-10",
     readTime: "5 min read",
-    imageSeed: "photo-1506905925346-be42c7f70a1f",
+    imageSeed: BLOG_COVER_IMAGES.campground,
     keyword: "best states to buy a campground",
   },
   {
@@ -253,7 +263,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-11",
     readTime: "5 min read",
-    imageSeed: "photo-1582719508461-905c674771a7",
+    imageSeed: BLOG_COVER_IMAGES.glamping,
     keyword: "glamping resort revenue",
   },
   {
@@ -264,7 +274,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-12",
     readTime: "5 min read",
-    imageSeed: "photo-147813394188826-12155eb24712",
+    imageSeed: BLOG_COVER_IMAGES.buyingGuide,
     keyword: "campground due diligence",
   },
   {
@@ -275,7 +285,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-13",
     readTime: "5 min read",
-    imageSeed: "photo-1470071459604-3b5ec3a7fe05",
+    imageSeed: BLOG_COVER_IMAGES.nature,
     keyword: "nature resort vs campground",
   },
   {
@@ -286,7 +296,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-14",
     readTime: "5 min read",
-    imageSeed: "photo-1441974231531-c6227db76b6e",
+    imageSeed: BLOG_COVER_IMAGES.rvPark,
     keyword: "increase rv park revenue",
   },
   {
@@ -297,7 +307,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-15",
     readTime: "5 min read",
-    imageSeed: "photo-1566073778509-1644f429a411",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "campground cap rate",
   },
   {
@@ -308,7 +318,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Industry Guide",
     publishedAt: "2026-05-16",
     readTime: "5 min read",
-    imageSeed: "photo-1499796314058-30a4c06c1aac",
+    imageSeed: BLOG_COVER_IMAGES.nature,
     keyword: "outdoor hospitality investment",
   },
   {
@@ -319,7 +329,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-17",
     readTime: "5 min read",
-    imageSeed: "photo-1551632810894-2114e09949f2",
+    imageSeed: BLOG_COVER_IMAGES.rvPark,
     keyword: "how to value an rv park",
   },
   {
@@ -330,7 +340,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-18",
     readTime: "5 min read",
-    imageSeed: "photo-1504280390367-361c45fab942",
+    imageSeed: BLOG_COVER_IMAGES.glamping,
     keyword: "glamping retreat operating costs",
   },
   {
@@ -341,7 +351,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-19",
     readTime: "5 min read",
-    imageSeed: "photo-1487730116645-99d3fdae8b82",
+    imageSeed: BLOG_COVER_IMAGES.buyingGuide,
     keyword: "campground buying process timeline",
   },
   {
@@ -352,7 +362,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-20",
     readTime: "5 min read",
-    imageSeed: "photo-1510312389730-6319c2dd4f32",
+    imageSeed: BLOG_COVER_IMAGES.buyingGuide,
     keyword: "how much does it cost to buy a campground",
   },
   {
@@ -363,7 +373,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-21",
     readTime: "5 min read",
-    imageSeed: "photo-1475483766626-983a0374a357",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "is buying a campground a good investment",
   },
   {
@@ -375,7 +385,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-22",
     readTime: "5 min read",
-    imageSeed: "photo-1682687220062-69f155a68d97",
+    imageSeed: BLOG_COVER_IMAGES.investment,
     keyword: "campground vs glamping investment",
   },
 ];
@@ -396,12 +406,7 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
 }
 
-export function getBlogImageUrl(seed: string, width = 1200, height = 800) {
-  if (seed.startsWith("http")) {
-    return `${seed}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
-  }
-  if (seed.startsWith("photo-")) {
-    return `https://images.unsplash.com/${seed}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
-  }
-  return `https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
+export function getBlogImageUrl(photoId: string, width = 800) {
+  const id = photoId.startsWith("photo-") ? photoId : `photo-${photoId}`;
+  return `https://images.unsplash.com/${id}?w=${width}&q=80`;
 }
