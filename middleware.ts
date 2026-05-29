@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
 
   if (PUBLIC_ADMIN_PATHS.includes(pathname)) {
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL("/admin/listings/new", request.url));
+      return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();
   }

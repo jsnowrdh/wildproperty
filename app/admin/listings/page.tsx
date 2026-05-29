@@ -13,7 +13,7 @@ export default async function AdminListingsPage() {
         subtitle={`${listings.length} listing${listings.length === 1 ? "" : "s"} in Supabase`}
         action={
           <Link
-            href="/admin/listings/new"
+            href="/admin"
             className="inline-flex items-center rounded-full bg-forest px-5 py-2 text-sm font-medium text-cream hover:bg-forest-deep"
           >
             Add listing

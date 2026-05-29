@@ -33,7 +33,7 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.push("/admin/listings/new");
+      router.push("/admin");
       router.refresh();
     } catch {
       setStatus("error");

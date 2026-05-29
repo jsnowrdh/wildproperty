@@ -45,7 +45,7 @@ export function AdminListingsTable({ listings }: AdminListingsTableProps) {
     return (
       <p className="text-muted-foreground">
         No listings yet.{" "}
-        <Link href="/admin/listings/new" className="text-forest underline">
+        <Link href="/admin" className="text-forest underline">
           Add your first listing
         </Link>
         .
