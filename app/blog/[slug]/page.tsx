@@ -59,13 +59,13 @@ export default async function BlogPostPage({ params }: PageProps) {
       <article className="mx-auto max-w-3xl px-6 py-16">
         <Link
           href="/blog"
-          className="mb-6 flex w-fit items-center gap-2 text-sm text-primary/80 transition-colors hover:text-primary"
+          className="mb-8 inline-flex items-center gap-2 text-sm text-primary/80 transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           All posts
         </Link>
 
-        <span className="block text-xs uppercase tracking-[0.2em] text-primary/70">
+        <span className="text-xs uppercase tracking-[0.2em] text-primary/70">
           {post.category}
         </span>
         <h1 className="mt-3 font-serif text-4xl leading-[1.1] text-primary md:text-5xl">
@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </div>
 
         <Image
-          src={getBlogImageUrl(post.imageUrl, 1200)}
+          src={getBlogImageUrl(post.imageSeed)}
           alt={post.title}
           width={1200}
           height={675}
