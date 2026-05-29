@@ -39,7 +39,7 @@ export interface BlogPost {
   category: string;
   publishedAt: string;
   readTime: string;
-  imageSeed: string;
+  imageUrl: string;
   keyword: string;
 }
 
@@ -143,7 +143,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-01",
     readTime: "5 min read",
-    imageSeed: "wp-blog-buy-campground",
+    imageUrl: "wp-blog-buy-campground",
     keyword: "how to buy a campground",
   },
   {
@@ -154,7 +154,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-02",
     readTime: "5 min read",
-    imageSeed: "wp-blog-buy-rv-park",
+    imageUrl: "wp-blog-buy-rv-park",
     keyword: "how to buy an rv park",
   },
   {
@@ -165,7 +165,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-03",
     readTime: "5 min read",
-    imageSeed: "wp-blog-glamping-roi",
+    imageUrl: "wp-blog-glamping-roi",
     keyword: "glamping retreat ROI",
   },
   {
@@ -176,7 +176,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-04",
     readTime: "5 min read",
-    imageSeed: "wp-blog-campground-valuation",
+    imageUrl: "wp-blog-campground-valuation",
     keyword: "campground valuation",
   },
   {
@@ -187,7 +187,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-05",
     readTime: "5 min read",
-    imageSeed: "wp-blog-rv-park-costs",
+    imageUrl: "wp-blog-rv-park-costs",
     keyword: "cost of owning an rv park",
   },
   {
@@ -198,7 +198,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-06",
     readTime: "5 min read",
-    imageSeed: "wp-blog-campground-vs-rv",
+    imageUrl: "wp-blog-campground-vs-rv",
     keyword: "campground vs rv park investment",
   },
   {
@@ -209,7 +209,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Financing Guide",
     publishedAt: "2026-05-07",
     readTime: "5 min read",
-    imageSeed: "wp-blog-campground-finance",
+    imageUrl: "wp-blog-campground-finance",
     keyword: "campground financing",
   },
   {
@@ -220,7 +220,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-08",
     readTime: "5 min read",
-    imageSeed: "wp-blog-buy-glamping",
+    imageUrl: "wp-blog-buy-glamping",
     keyword: "buying a glamping resort",
   },
   {
@@ -231,7 +231,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Financing Guide",
     publishedAt: "2026-05-09",
     readTime: "5 min read",
-    imageSeed: "wp-blog-sba-loans",
+    imageUrl: "wp-blog-sba-loans",
     keyword: "sba loan campground",
   },
   {
@@ -242,7 +242,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Market Guide",
     publishedAt: "2026-05-10",
     readTime: "5 min read",
-    imageSeed: "wp-blog-best-states",
+    imageUrl: "wp-blog-best-states",
     keyword: "best states to buy a campground",
   },
   {
@@ -253,7 +253,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-11",
     readTime: "5 min read",
-    imageSeed: "wp-blog-glamping-revenue",
+    imageUrl: "wp-blog-glamping-revenue",
     keyword: "glamping resort revenue",
   },
   {
@@ -264,7 +264,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-12",
     readTime: "5 min read",
-    imageSeed: "wp-blog-due-diligence",
+    imageUrl: "wp-blog-due-diligence",
     keyword: "campground due diligence",
   },
   {
@@ -275,7 +275,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-13",
     readTime: "5 min read",
-    imageSeed: "wp-blog-nature-vs-camp",
+    imageUrl: "wp-blog-nature-vs-camp",
     keyword: "nature resort vs campground",
   },
   {
@@ -286,7 +286,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-14",
     readTime: "5 min read",
-    imageSeed: "wp-blog-rv-revenue",
+    imageUrl: "wp-blog-rv-revenue",
     keyword: "increase rv park revenue",
   },
   {
@@ -297,7 +297,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-15",
     readTime: "5 min read",
-    imageSeed: "wp-blog-cap-rates",
+    imageUrl: "wp-blog-cap-rates",
     keyword: "campground cap rate",
   },
   {
@@ -308,7 +308,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Industry Guide",
     publishedAt: "2026-05-16",
     readTime: "5 min read",
-    imageSeed: "wp-blog-outdoor-hospitality",
+    imageUrl: "wp-blog-outdoor-hospitality",
     keyword: "outdoor hospitality investment",
   },
   {
@@ -319,7 +319,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Valuation Guide",
     publishedAt: "2026-05-17",
     readTime: "5 min read",
-    imageSeed: "wp-blog-value-rv-park",
+    imageUrl: "wp-blog-value-rv-park",
     keyword: "how to value an rv park",
   },
   {
@@ -330,7 +330,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Operations Guide",
     publishedAt: "2026-05-18",
     readTime: "5 min read",
-    imageSeed: "wp-blog-glamping-costs",
+    imageUrl: "wp-blog-glamping-costs",
     keyword: "glamping retreat operating costs",
   },
   {
@@ -341,7 +341,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-19",
     readTime: "5 min read",
-    imageSeed: "wp-blog-buy-timeline",
+    imageUrl: "wp-blog-buy-timeline",
     keyword: "campground buying process timeline",
   },
   {
@@ -352,7 +352,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Buying Guide",
     publishedAt: "2026-05-20",
     readTime: "5 min read",
-    imageSeed: "wp-blog-cost",
+    imageUrl: "wp-blog-cost",
     keyword: "how much does it cost to buy a campground",
   },
   {
@@ -363,7 +363,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-21",
     readTime: "5 min read",
-    imageSeed: "wp-blog-campground-investment",
+    imageUrl: "wp-blog-campground-investment",
     keyword: "is buying a campground a good investment",
   },
   {
@@ -375,7 +375,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Investment Guide",
     publishedAt: "2026-05-22",
     readTime: "5 min read",
-    imageSeed: "wp-blog-compare",
+    imageUrl: "wp-blog-compare",
     keyword: "campground vs glamping investment",
   },
 ];
@@ -396,6 +396,10 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.slug === slug);
 }
 
-export function getBlogImageUrl(seed: string, width = 1200, height = 800) {
-  return `https://picsum.photos/seed/${seed}/${width}/${height}`;
+export function getBlogImageUrl(imageUrl: string, width = 800) {
+  if (imageUrl.startsWith("http")) {
+    const base = imageUrl.split("?")[0];
+    return `${base}?w=${width}&q=80`;
+  }
+  return `https://picsum.photos/seed/${imageUrl}/${width}/${Math.round(width * 0.667)}`;
 }
