@@ -2,7 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { saveListingAction } from "@/app/admin/actions";
+import {
+  createListingAction,
+  updateListingAction,
+} from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -116,7 +119,9 @@ export function ListingForm({
         status: values.status.trim() || "active",
       };
 
-      const result = await saveListingAction(payload, initialListing?.id);
+      const result = initialListing?.id
+        ? await updateListingAction(initialListing.id, payload)
+        : await createListingAction(payload);
 
       if (!result?.success) {
         setStatus("error");

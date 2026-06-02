@@ -26,15 +26,16 @@ function logEnvStatus(context: string) {
   });
 }
 
-export async function saveListingAction(
+async function persistListing(
   rawBody: Record<string, unknown>,
   listingId?: string
 ): Promise<SaveListingResult> {
-  logEnvStatus("saveListingAction");
+  const context = listingId ? "updateListingAction" : "createListingAction";
+  logEnvStatus(context);
 
   try {
     const input = buildListingInsertPayload(rawBody);
-    console.log("[saveListingAction] insert payload:", input);
+    console.log(`[${context}] payload:`, input);
 
     const validationError = validateListingInsertPayload(input);
     if (validationError) {
@@ -50,7 +51,7 @@ export async function saveListingAction(
         .eq("id", listingId);
 
       if (error) {
-        console.error("[saveListingAction] Supabase update error:", error);
+        console.error(`[${context}] Supabase update error:`, error);
         return {
           success: false,
           error: formatSupabaseError(error, "Failed to update listing."),
@@ -60,7 +61,7 @@ export async function saveListingAction(
       const { error } = await supabase.from("listings").insert(input);
 
       if (error) {
-        console.error("[saveListingAction] Supabase insert error:", error);
+        console.error(`[${context}] Supabase insert error:`, error);
         return {
           success: false,
           error: formatSupabaseError(error, "Failed to create listing."),
@@ -68,15 +69,42 @@ export async function saveListingAction(
       }
     }
 
-    console.log("[saveListingAction] success");
+    console.log(`[${context}] success`);
     return { success: true };
   } catch (error) {
-    console.error("[saveListingAction] unexpected error:", error);
+    console.error(`[${context}] unexpected error:`, error);
     return {
       success: false,
       error: formatSupabaseError(error, "Failed to save listing."),
     };
   }
+}
+
+/** Create a new listing via service role (auth enforced by middleware on /admin/*). */
+export async function createListingAction(
+  rawBody: Record<string, unknown>
+): Promise<SaveListingResult> {
+  return persistListing(rawBody);
+}
+
+/** Update an existing listing via service role (auth enforced by middleware on /admin/*). */
+export async function updateListingAction(
+  listingId: string,
+  rawBody: Record<string, unknown>
+): Promise<SaveListingResult> {
+  if (!listingId.trim()) {
+    return { success: false, error: "Listing ID is required to update." };
+  }
+
+  return persistListing(rawBody, listingId);
+}
+
+/** @deprecated Prefer createListingAction / updateListingAction */
+export async function saveListingAction(
+  rawBody: Record<string, unknown>,
+  listingId?: string
+): Promise<SaveListingResult> {
+  return persistListing(rawBody, listingId);
 }
 
 export async function deleteListingAction(
