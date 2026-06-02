@@ -15,6 +15,10 @@ export const LISTING_TABLE_COLUMNS = [
   "occupancy",
   "image_url",
   "status",
+  "broker_name",
+  "broker_email",
+  "broker_phone",
+  "broker_company",
   "created_at",
 ] as const;
 
@@ -34,6 +38,10 @@ export const LISTING_INSERT_COLUMNS = [
   "occupancy",
   "image_url",
   "status",
+  "broker_name",
+  "broker_email",
+  "broker_phone",
+  "broker_company",
 ] as const;
 
 export type ListingInsertColumn = (typeof LISTING_INSERT_COLUMNS)[number];
@@ -53,6 +61,10 @@ export interface ListingInsertPayload {
   occupancy: string | null;
   image_url: string;
   status: string;
+  broker_name: string | null;
+  broker_email: string | null;
+  broker_phone: string | null;
+  broker_company: string | null;
 }
 
 export function buildListingInsertPayload(
@@ -78,6 +90,18 @@ export function buildListingInsertPayload(
     occupancy: body.occupancy ? String(body.occupancy).trim() : null,
     image_url: String(body.image_url ?? "").trim(),
     status: String(body.status ?? "active").trim() || "active",
+    broker_name: body.broker_name
+      ? String(body.broker_name).trim()
+      : null,
+    broker_email: body.broker_email
+      ? String(body.broker_email).trim()
+      : null,
+    broker_phone: body.broker_phone
+      ? String(body.broker_phone).trim()
+      : null,
+    broker_company: body.broker_company
+      ? String(body.broker_company).trim()
+      : null,
   };
 }
 

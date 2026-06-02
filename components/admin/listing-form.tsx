@@ -35,6 +35,10 @@ export interface ListingFormValues {
   occupancy: string;
   image_url: string;
   status: string;
+  broker_name: string;
+  broker_email: string;
+  broker_phone: string;
+  broker_company: string;
 }
 
 const emptyValues: ListingFormValues = {
@@ -52,6 +56,10 @@ const emptyValues: ListingFormValues = {
   occupancy: "",
   image_url: "",
   status: "active",
+  broker_name: "",
+  broker_email: "",
+  broker_phone: "",
+  broker_company: "",
 };
 
 function listingToFormValues(listing: Listing): ListingFormValues {
@@ -70,6 +78,10 @@ function listingToFormValues(listing: Listing): ListingFormValues {
     occupancy: listing.financials?.occupancy ?? "",
     image_url: listing.imageUrl,
     status: listing.status ?? "active",
+    broker_name: listing.broker?.name ?? "",
+    broker_email: listing.broker?.email ?? "",
+    broker_phone: listing.broker?.phone ?? "",
+    broker_company: listing.broker?.company ?? "",
   };
 }
 
@@ -117,6 +129,10 @@ export function ListingForm({
         occupancy: values.occupancy.trim() || null,
         image_url: values.image_url.trim(),
         status: values.status.trim() || "active",
+        broker_name: values.broker_name.trim() || null,
+        broker_email: values.broker_email.trim() || null,
+        broker_phone: values.broker_phone.trim() || null,
+        broker_company: values.broker_company.trim() || null,
       };
 
       const result = initialListing?.id
@@ -315,6 +331,53 @@ export function ListingForm({
           rows={6}
           className="mt-1.5"
         />
+      </div>
+
+      <div className="rounded-xl border border-border p-6">
+        <h3 className="font-serif text-lg text-forest">Broker contact</h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Shown to buyers on the listing detail page.
+        </p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <div>
+            <Label htmlFor="broker_name">Broker name</Label>
+            <Input
+              id="broker_name"
+              value={values.broker_name}
+              onChange={(e) => updateField("broker_name", e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label htmlFor="broker_company">Broker company</Label>
+            <Input
+              id="broker_company"
+              value={values.broker_company}
+              onChange={(e) => updateField("broker_company", e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label htmlFor="broker_email">Broker email</Label>
+            <Input
+              id="broker_email"
+              type="email"
+              value={values.broker_email}
+              onChange={(e) => updateField("broker_email", e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+          <div>
+            <Label htmlFor="broker_phone">Broker phone</Label>
+            <Input
+              id="broker_phone"
+              type="tel"
+              value={values.broker_phone}
+              onChange={(e) => updateField("broker_phone", e.target.value)}
+              className="mt-1.5"
+            />
+          </div>
+        </div>
       </div>
 
       {status === "error" && (

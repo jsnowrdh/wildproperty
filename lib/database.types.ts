@@ -26,6 +26,10 @@ export interface Database {
           occupancy: string | null;
           image_url: string;
           status: string;
+          broker_name: string | null;
+          broker_email: string | null;
+          broker_phone: string | null;
+          broker_company: string | null;
           created_at: string;
         };
         Insert: {
@@ -44,6 +48,10 @@ export interface Database {
           occupancy?: string | null;
           image_url: string;
           status?: string;
+          broker_name?: string | null;
+          broker_email?: string | null;
+          broker_phone?: string | null;
+          broker_company?: string | null;
           created_at?: string;
         };
         Update: {
@@ -62,6 +70,10 @@ export interface Database {
           occupancy?: string | null;
           image_url?: string;
           status?: string;
+          broker_name?: string | null;
+          broker_email?: string | null;
+          broker_phone?: string | null;
+          broker_company?: string | null;
           created_at?: string;
         };
         Relationships: [];

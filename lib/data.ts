@@ -30,6 +30,12 @@ export interface Listing {
     noi?: string;
     occupancy?: string;
   };
+  broker?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+  };
 }
 
 export interface BlogPost {

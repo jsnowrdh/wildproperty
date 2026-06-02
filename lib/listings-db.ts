@@ -42,6 +42,18 @@ export function mapDbListingToListing(row: DbListing): Listing {
             occupancy: row.occupancy ?? undefined,
           }
         : undefined,
+    broker:
+      row.broker_name ||
+      row.broker_email ||
+      row.broker_phone ||
+      row.broker_company
+        ? {
+            name: row.broker_name ?? undefined,
+            email: row.broker_email ?? undefined,
+            phone: row.broker_phone ?? undefined,
+            company: row.broker_company ?? undefined,
+          }
+        : undefined,
     status: row.status,
     createdAt: row.created_at,
   };

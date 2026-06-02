@@ -13,7 +13,7 @@ import {
 import { getRelatedListings, resolveListingImage } from "@/lib/listings-db";
 import { formatAcres } from "@/lib/format";
 import { breadcrumbJsonLd, realEstateListingJsonLd } from "@/lib/seo";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Building2, CheckCircle2, Mail, Phone, User } from "lucide-react";
 
 interface ListingDetailContentProps {
   listing: Listing;
@@ -163,6 +163,68 @@ export function ListingDetailContent({
                       <div className="flex justify-between">
                         <dt className="text-muted-foreground">Occupancy</dt>
                         <dd>{listing.financials.occupancy}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              )}
+
+              {listing.broker && (
+                <div className="mt-6 rounded-lg bg-muted/50 p-4">
+                  <p className="text-sm font-semibold text-forest">
+                    Listing broker
+                  </p>
+                  <dl className="mt-3 space-y-3 text-sm">
+                    {listing.broker.name && (
+                      <div className="flex items-start gap-2">
+                        <User className="mt-0.5 size-4 shrink-0 text-forest-light" />
+                        <div>
+                          <dt className="sr-only">Broker name</dt>
+                          <dd className="font-medium text-foreground">
+                            {listing.broker.name}
+                          </dd>
+                        </div>
+                      </div>
+                    )}
+                    {listing.broker.company && (
+                      <div className="flex items-start gap-2">
+                        <Building2 className="mt-0.5 size-4 shrink-0 text-forest-light" />
+                        <div>
+                          <dt className="sr-only">Broker company</dt>
+                          <dd>{listing.broker.company}</dd>
+                        </div>
+                      </div>
+                    )}
+                    {listing.broker.email && (
+                      <div className="flex items-start gap-2">
+                        <Mail className="mt-0.5 size-4 shrink-0 text-forest-light" />
+                        <div>
+                          <dt className="sr-only">Broker email</dt>
+                          <dd>
+                            <a
+                              href={`mailto:${listing.broker.email}`}
+                              className="font-medium text-forest underline-offset-4 hover:underline"
+                            >
+                              {listing.broker.email}
+                            </a>
+                          </dd>
+                        </div>
+                      </div>
+                    )}
+                    {listing.broker.phone && (
+                      <div className="flex items-start gap-2">
+                        <Phone className="mt-0.5 size-4 shrink-0 text-forest-light" />
+                        <div>
+                          <dt className="sr-only">Broker phone</dt>
+                          <dd>
+                            <a
+                              href={`tel:${listing.broker.phone.replace(/\s/g, "")}`}
+                              className="font-medium text-forest underline-offset-4 hover:underline"
+                            >
+                              {listing.broker.phone}
+                            </a>
+                          </dd>
+                        </div>
                       </div>
                     )}
                   </dl>
