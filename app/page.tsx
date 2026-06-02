@@ -31,6 +31,8 @@ export const metadata = buildMetadata({
   path: "/",
 });
 
+export const dynamic = "force-dynamic";
+
 const categoryIcons = {
   campground: Tent,
   "glamping-retreat": Sparkles,

@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import type { DbListing, DbListingInsert } from "@/lib/database.types";
 import type { Listing, PropertyType } from "@/lib/data";
 import { getStateByCode } from "@/lib/data";
@@ -47,6 +48,8 @@ export function mapDbListingToListing(row: DbListing): Listing {
 }
 
 export async function getActiveListings(): Promise<Listing[]> {
+  noStore();
+
   const supabase = createSupabaseClient();
   if (!supabase) return [];
 
