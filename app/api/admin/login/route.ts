@@ -1,8 +1,9 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import {
   ADMIN_AUTH_COOKIE,
   ADMIN_AUTH_VALUE,
-  adminAuthCookieOptions,
+  getAdminAuthCookieOptions,
 } from "@/lib/admin-auth";
 
 interface LoginRequestBody {
@@ -36,9 +37,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = NextResponse.json({ success: true });
-    response.cookies.set(ADMIN_AUTH_COOKIE, ADMIN_AUTH_VALUE, adminAuthCookieOptions);
-    return response;
+    const cookieStore = await cookies();
+    cookieStore.set(
+      ADMIN_AUTH_COOKIE,
+      ADMIN_AUTH_VALUE,
+      getAdminAuthCookieOptions(request)
+    );
+
+    return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },

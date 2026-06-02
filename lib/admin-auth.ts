@@ -3,18 +3,53 @@ import { NextResponse } from "next/server";
 
 export const ADMIN_AUTH_COOKIE = "admin_auth";
 export const ADMIN_AUTH_VALUE = "authenticated";
+/** Session lifetime in seconds (24 hours). */
+export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24;
 
 export function isAdminAuthenticated(cookieValue: string | undefined): boolean {
   return cookieValue === ADMIN_AUTH_VALUE;
 }
 
-export const adminAuthCookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  path: "/",
-  maxAge: 60 * 60 * 24 * 7,
-};
+export function getAdminAuthCookieOptions(request?: Pick<Request, "url">) {
+  const isSecure =
+    request != null
+      ? new URL(request.url).protocol === "https:"
+      : process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: ADMIN_SESSION_MAX_AGE,
+  };
+}
+
+/** @deprecated Use getAdminAuthCookieOptions(request) for request-aware secure flag */
+export const adminAuthCookieOptions = getAdminAuthCookieOptions();
+
+export function applyAdminAuthCookie(
+  response: NextResponse,
+  request?: Pick<Request, "url">
+) {
+  response.cookies.set(
+    ADMIN_AUTH_COOKIE,
+    ADMIN_AUTH_VALUE,
+    getAdminAuthCookieOptions(request)
+  );
+  return response;
+}
+
+export function clearAdminAuthCookie(
+  response: NextResponse,
+  request?: Pick<Request, "url">
+) {
+  response.cookies.set(ADMIN_AUTH_COOKIE, "", {
+    ...getAdminAuthCookieOptions(request),
+    maxAge: 0,
+  });
+  return response;
+}
 
 function readAuthFromCookieHeader(
   cookieHeader: string | null

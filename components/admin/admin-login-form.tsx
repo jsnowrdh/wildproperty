@@ -1,13 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function AdminLoginForm() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -33,8 +31,8 @@ export function AdminLoginForm() {
         return;
       }
 
-      router.push("/admin");
-      router.refresh();
+      // Full navigation ensures the new session cookie is sent on the first admin request.
+      window.location.assign("/admin");
     } catch {
       setStatus("error");
       setErrorMessage("Something went wrong. Please try again.");

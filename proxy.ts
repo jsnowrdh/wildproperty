@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import {
   ADMIN_AUTH_COOKIE,
+  applyAdminAuthCookie,
   isAdminAuthenticated,
 } from "@/lib/admin-auth";
 
@@ -16,11 +17,11 @@ export function proxy(request: NextRequest) {
 
   // Server Actions POST to the page URL — never redirect (returns HTML → "unexpected response").
   if (isServerActionRequest(request)) {
-    return NextResponse.next();
+    return NextResponse.next({ request });
   }
 
   if (pathname.startsWith("/api/admin")) {
-    return NextResponse.next();
+    return NextResponse.next({ request });
   }
 
   const authCookie = request.cookies.get(ADMIN_AUTH_COOKIE)?.value;
@@ -30,16 +31,21 @@ export function proxy(request: NextRequest) {
     if (isAuthenticated) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
-    return NextResponse.next();
+    return NextResponse.next({ request });
   }
 
   if (pathname.startsWith("/admin")) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
+
+    // Re-set the session cookie on every admin page request so it persists across navigation.
+    const response = NextResponse.next({ request });
+    applyAdminAuthCookie(response, request);
+    return response;
   }
 
-  return NextResponse.next();
+  return NextResponse.next({ request });
 }
 
 export const config = {
