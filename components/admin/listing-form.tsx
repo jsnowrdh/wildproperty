@@ -2,10 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  createListingAction,
-  updateListingAction,
-} from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -113,6 +109,8 @@ export function ListingForm({
     setStatus("loading");
     setErrorMessage("");
 
+    let saved = false;
+
     try {
       const payload = {
         slug: values.slug.trim(),
@@ -135,16 +133,31 @@ export function ListingForm({
         broker_company: values.broker_company.trim() || null,
       };
 
-      const result = initialListing?.id
-        ? await updateListingAction(initialListing.id, payload)
-        : await createListingAction(payload);
+      const listingId = initialListing?.id?.trim();
+      const url = listingId
+        ? `/api/admin/listings/${listingId}`
+        : "/api/admin/listings";
+      const method = listingId ? "PUT" : "POST";
 
-      if (!result?.success) {
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        success?: boolean;
+      };
+
+      if (!response.ok) {
         setStatus("error");
-        setErrorMessage(result?.error ?? "Failed to save listing.");
+        setErrorMessage(data.error ?? "Failed to save listing.");
         return;
       }
 
+      saved = true;
       router.push("/admin/listings");
       router.refresh();
     } catch (error) {
@@ -155,6 +168,10 @@ export function ListingForm({
           ? error.message
           : "An unexpected error occurred. Check Vercel logs for details."
       );
+    } finally {
+      if (!saved) {
+        setStatus((current) => (current === "loading" ? "idle" : current));
+      }
     }
   }
 

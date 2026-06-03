@@ -178,11 +178,18 @@ export async function updateListing(id: string, input: Partial<DbListingInsert>)
     .update(input)
     .eq("id", id)
     .select("*")
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(toErrorMessage(error, "Failed to update listing."));
   }
+
+  if (!data) {
+    throw new Error(
+      "Listing not found or update was blocked. Admin writes require SUPABASE_SERVICE_ROLE_KEY (service role bypasses RLS)."
+    );
+  }
+
   return mapDbListingToListing(data);
 }
 

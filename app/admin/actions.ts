@@ -5,6 +5,7 @@ import {
   buildListingInsertPayload,
   validateListingInsertPayload,
 } from "@/lib/listings-schema";
+import { createListing, updateListing } from "@/lib/listings-db";
 import { formatSupabaseError } from "@/lib/supabase-error";
 import { requireSupabaseAdminClient } from "@/lib/supabase-admin";
 
@@ -42,31 +43,12 @@ async function persistListing(
       return { success: false, error: validationError };
     }
 
-    const supabase = requireSupabaseAdminClient();
+    requireSupabaseAdminClient();
 
     if (listingId) {
-      const { error } = await supabase
-        .from("listings")
-        .update(input as DbListingInsert)
-        .eq("id", listingId);
-
-      if (error) {
-        console.error(`[${context}] Supabase update error:`, error);
-        return {
-          success: false,
-          error: formatSupabaseError(error, "Failed to update listing."),
-        };
-      }
+      await updateListing(listingId, input as DbListingInsert);
     } else {
-      const { error } = await supabase.from("listings").insert(input);
-
-      if (error) {
-        console.error(`[${context}] Supabase insert error:`, error);
-        return {
-          success: false,
-          error: formatSupabaseError(error, "Failed to create listing."),
-        };
-      }
+      await createListing(input as DbListingInsert);
     }
 
     console.log(`[${context}] success`);
